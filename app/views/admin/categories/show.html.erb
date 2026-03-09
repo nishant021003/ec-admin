@@ -1,0 +1,47 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to "Categories", admin_categories_path %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @category.name %></li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0"><%= @category.name %></h1>
+  <div class="d-flex gap-2">
+    <%= link_to "Edit", edit_admin_category_path(@category), class: "btn btn-primary" %>
+    <%= button_to "Delete", admin_category_path(@category), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+<dl class="row mb-0">
+  <dt class="col-sm-2">Slug</dt>
+  <dd class="col-sm-10"><%= @category.slug %></dd>
+
+  <dt class="col-sm-2">Parent</dt>
+  <dd class="col-sm-10">
+    <% if @category.parent %>
+      <%= link_to @category.parent.name, admin_category_path(@category.parent) %>
+    <% else %>
+      <span class="text-muted">None</span>
+    <% end %>
+  </dd>
+
+  <dt class="col-sm-2">Products</dt>
+  <dd class="col-sm-10">
+    <% if @category.products.any? %>
+      <ul class="list-unstyled">
+        <% @category.products.each do |p| %>
+          <li><%= link_to p.name, admin_product_path(p) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <span class="text-muted">No products</span>
+    <% end %>
+  </dd>
+</dl>
+  </div>
+</div>
+
+<%= link_to "← Back to categories", admin_categories_path, class: "btn btn-secondary mt-3" %>

@@ -1,0 +1,9 @@
+<h1 class="mb-4">Edit Coupon</h1>
+
+<div class="card">
+  <div class="card-body">
+    <%= render "form", coupon: @coupon %>
+  </div>
+</div>
+
+<%= link_to "← Back to coupon", admin_coupon_path(@coupon), class: "btn btn-secondary mt-3" %>

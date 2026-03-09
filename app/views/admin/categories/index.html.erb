@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Categories</h1>
+  <%= link_to "New Category", new_admin_category_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+<table class="table table-striped table-hover mb-0">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Slug</th>
+      <th>Parent</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td><%= category.name %></td>
+        <td><%= category.slug %></td>
+        <td>
+          <% if category.parent %>
+            <%= link_to category.parent.name, admin_category_path(category.parent) %>
+          <% else %>
+            <span class="text-muted">None</span>
+          <% end %>
+        </td>
+        <td>
+          <div class="d-flex gap-2 flex-wrap">
+            <%= link_to "View", admin_category_path(category), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to "Edit", edit_admin_category_path(category), class: "btn btn-sm btn-outline-secondary" %>
+            <%= button_to "Delete", admin_category_path(category), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-sm btn-outline-danger" %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center mt-3">
+  <%= paginate @categories %>
+</div>

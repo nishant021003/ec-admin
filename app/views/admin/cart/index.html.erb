@@ -1,0 +1,61 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to "Products", admin_products_path %></li>
+    <li class="breadcrumb-item active" aria-current="page">Cart</li>
+  </ol>
+</nav>
+
+<h1 class="mb-4">Cart</h1>
+
+<% if @cart_items.blank? %>
+  <div class="alert alert-info">
+    Your cart is empty. <%= link_to "Browse products", admin_products_path, class: "alert-link" %> to add items.
+  </div>
+  <%= link_to "← Back to products", admin_products_path, class: "btn btn-secondary" %>
+  <% return %>
+<% end %>
+
+<div class="card mb-4">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @cart_items.each do |item| %>
+          <tr>
+            <td>
+              <%= link_to item[:product].name, admin_product_path(item[:product]), class: "text-decoration-none" %>
+            </td>
+            <td><%= number_to_currency(item[:product].price / 100.0) %></td>
+            <td>
+              <%= form_with url: admin_cart_update_path(product_id: item[:product].id), method: :patch, class: "d-inline-flex align-items-center gap-1" do |f| %>
+                <%= f.number_field :quantity, value: item[:quantity], min: 1, max: item[:product].stock_quantity, class: "form-control form-control-sm", style: "width: 70px;" %>
+                <%= f.submit "Update", class: "btn btn-sm btn-outline-secondary" %>
+              <% end %>
+            </td>
+            <td><%= number_to_currency((item[:product].price * item[:quantity]) / 100.0) %></td>
+            <td>
+              <%= button_to "Remove", admin_cart_remove_path(product_id: item[:product].id), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Remove from cart?" } } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <span class="text-muted"><%= @cart_items.size %> item(s)</span>
+    <div>
+      <strong>Subtotal: <%= number_to_currency(@subtotal_cents / 100.0) %></strong>
+      <%= link_to "Proceed to checkout", admin_checkout_path, class: "btn btn-primary ms-3" %>
+    </div>
+  </div>
+</div>
+
+<%= link_to "← Continue shopping", admin_products_path, class: "btn btn-secondary" %>

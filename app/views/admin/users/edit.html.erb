@@ -1,0 +1,9 @@
+<h1 class="mb-4">Edit admin user</h1>
+
+<div class="card">
+  <div class="card-body">
+    <%= render "form", user: @user %>
+  </div>
+</div>
+
+<%= link_to "← Back to admin users", admin_users_path, class: "btn btn-secondary mt-3" %>

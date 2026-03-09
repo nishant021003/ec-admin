@@ -1,0 +1,9 @@
+<h1 class="mb-4">Edit gift card</h1>
+
+<div class="card">
+  <div class="card-body">
+    <%= render "form", gift_card: @gift_card %>
+  </div>
+</div>
+
+<%= link_to "← Back to gift card", admin_gift_card_path(@gift_card), class: "btn btn-secondary mt-3" %>

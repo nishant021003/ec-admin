@@ -1,0 +1,33 @@
+<%= form_with model: customer, url: customer.persisted? ? admin_customer_path(customer) : admin_customers_path, method: customer.persisted? ? :patch : :post, local: true do |f| %>
+  <% if customer.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% customer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email, class: "form-label" %>
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :password, class: "form-label" %>
+    <%= f.password_field :password, class: "form-control", placeholder: customer.persisted? ? "Leave blank to keep unchanged" : nil %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :password_confirmation, class: "form-label" %>
+    <%= f.password_field :password_confirmation, class: "form-control" %>
+  </div>
+
+  <%= f.submit customer.persisted? ? "Update Customer" : "Create Customer", class: "btn btn-primary" %>
+<% end %>

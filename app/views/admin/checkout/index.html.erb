@@ -1,0 +1,97 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to "Products", admin_products_path %></li>
+    <li class="breadcrumb-item"><%= link_to "Cart", admin_cart_path %></li>
+    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+  </ol>
+</nav>
+
+<h1 class="mb-4">Checkout</h1>
+
+<%= form_with url: admin_checkout_path, method: :post, local: true do |f| %>
+  <div class="row">
+    <div class="col-lg-7">
+      <div class="card mb-4">
+        <div class="card-header">Order summary</div>
+        <div class="table-responsive">
+          <table class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Unit price</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @cart_items.each do |item| %>
+                <tr>
+                  <td><%= item[:product].name %></td>
+                  <td><%= item[:quantity] %></td>
+                  <td><%= number_to_currency(item[:product].price / 100.0) %></td>
+                  <td><%= number_to_currency((item[:product].price * item[:quantity]) / 100.0) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">Apply one discount</div>
+        <div class="card-body">
+          <p class="text-muted small mb-3">You can use either a coupon code or a gift card code, not both.</p>
+          <div class="mb-3">
+            <div class="form-check">
+              <%= f.radio_button :discount_type, "coupon", id: "discount_coupon", checked: params[:discount_type] != "gift_card", class: "form-check-input" %>
+              <%= f.label :discount_type, "Coupon code", for: "discount_coupon", class: "form-check-label" %>
+            </div>
+            <div class="form-check">
+              <%= f.radio_button :discount_type, "gift_card", id: "discount_gift_card", checked: params[:discount_type] == "gift_card", class: "form-check-input" %>
+              <%= f.label :discount_type, "Gift card code", for: "discount_gift_card", class: "form-check-label" %>
+            </div>
+          </div>
+          <div class="mb-3">
+            <%= f.text_field :discount_code, value: params[:discount_code], class: "form-control", placeholder: "Enter code (e.g. WELCOME10 or GC-100-XXXX)" %>
+          </div>
+          <div class="mt-3">
+            <%= f.submit "Apply & Update", name: "apply", class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card mb-4">
+        <div class="card-header">Totals</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Subtotal</span>
+            <span><%= number_to_currency(@subtotal_cents / 100.0) %></span>
+          </li>
+          <% if @discount_cents.positive? %>
+            <li class="list-group-item d-flex justify-content-between text-success">
+              <span>
+                Discount
+                <% if @applied_coupon %>
+                  <span class="badge bg-success ms-1"><%= @applied_coupon.code %>: <%= @applied_coupon.discount_label %></span>
+                <% end %>
+                <% if @applied_gift_card %>
+                  <span class="badge bg-info ms-1">Gift card: <%= @applied_gift_card.code %></span>
+                <% end %>
+              </span>
+              <span>-<%= number_to_currency(@discount_cents / 100.0) %></span>
+            </li>
+          <% end %>
+          <li class="list-group-item d-flex justify-content-between fs-5 fw-bold">
+            <span>Total</span>
+            <span><%= number_to_currency(@total_cents / 100.0) %></span>
+          </li>
+        </ul>
+      </div>
+
+      <%= f.submit "Place order", class: "btn btn-success btn-lg w-100 mb-2" %>
+      <%= link_to "← Back to cart", admin_cart_path, class: "btn btn-outline-secondary w-100" %>
+    </div>
+  </div>
+<% end %>

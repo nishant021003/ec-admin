@@ -1,0 +1,66 @@
+<%= form_with model: product, url: product.persisted? ? admin_product_path(product) : admin_products_path, method: product.persisted? ? :patch : :post, local: true do |f| %>
+  <% if product.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :description, class: "form-label" %>
+    <%= f.text_area :description, class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :stock_quantity, "Stock quantity", class: "form-label" %>
+    <%= f.number_field :stock_quantity, class: "form-control", min: 0, value: product.stock_quantity || 0 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :price, "Price (cents)", class: "form-label" %>
+    <%= f.number_field :price, class: "form-control", min: 0 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :status, class: "form-label" %>
+    <%= f.select :status, [["Active", "active"], ["Draft", "draft"], ["Archived", "archived"]], {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :category_ids, "Categories", class: "form-label" %>
+    <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+      <div class="row">
+        <%= f.collection_check_boxes :category_ids, Category.order(:name), :id, :name do |b| %>
+          <div class="col-md-4 col-lg-3">
+            <div class="form-check">
+              <%= b.check_box class: "form-check-input" %>
+              <%= b.label class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :images, "Product images", class: "form-label" %>
+    <%= f.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
+    <% if product.persisted? && product.images.attached? %>
+      <div class="mt-2 d-flex flex-wrap gap-2">
+        <% product.images.each do |img| %>
+          <%= image_tag img, class: "img-thumbnail", style: "width: 80px; height: 80px; object-fit: cover;" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= f.submit product.persisted? ? "Update Product" : "Create Product", class: "btn btn-primary" %>
+<% end %>

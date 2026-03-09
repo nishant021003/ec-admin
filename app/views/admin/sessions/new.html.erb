@@ -1,0 +1,17 @@
+<div class="card shadow">
+  <div class="card-body p-4">
+    <h2 class="card-title mb-4">Admin Sign In</h2>
+
+    <%= form_with url: admin_login_path, local: true do |f| %>
+      <div class="mb-3">
+        <%= f.label :email, class: "form-label" %>
+        <%= f.email_field :email, class: "form-control", autofocus: true, required: true %>
+      </div>
+      <div class="mb-3">
+        <%= f.label :password, class: "form-label" %>
+        <%= f.password_field :password, class: "form-control", required: true %>
+      </div>
+      <%= f.submit "Sign in", class: "btn btn-primary w-100" %>
+    <% end %>
+  </div>
+</div>

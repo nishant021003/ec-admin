@@ -1,0 +1,150 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to "Products", admin_products_path %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @product.name %></li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0"><%= @product.name %></h1>
+  <div class="d-flex gap-2">
+    <%= link_to "Edit", edit_admin_product_path(@product), class: "btn btn-primary" %>
+    <%= button_to "Delete", admin_product_path(@product), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+<% if @product.images.attached? %>
+  <div class="mb-4">
+    <h6 class="text-muted mb-2">Product images (<%= @product.images.count %>) — click to view full size</h6>
+    <div class="d-flex flex-wrap gap-2">
+      <% @product.images.each_with_index do |img, i| %>
+        <a href="#" class="product-image-thumb" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="<%= url_for(img) %>" data-index="<%= i %>">
+          <%= image_tag img, class: "img-thumbnail", style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;", alt: "Image #{i + 1}" %>
+        </a>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Image zoom modal with prev/next for multiple images -->
+  <div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-secondary">
+          <span class="text-white" id="imageCounter">1 / <%= @product.images.count %></span>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-3 position-relative">
+          <% if @product.images.count > 1 %>
+            <button type="button" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-2" id="prevImage" aria-label="Previous">
+              ‹
+            </button>
+            <button type="button" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-2" id="nextImage" aria-label="Next">
+              ›
+            </button>
+          <% end %>
+          <img id="modalImage" src="" alt="Product image" class="img-fluid d-block mx-auto rounded" style="max-height: 75vh;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="productImagesData" data-urls='<%= @product.images.map { |img| url_for(img) }.to_json %>' style="display:none;"></div>
+  <script>
+    (function() {
+      const dataEl = document.getElementById('productImagesData');
+      const images = dataEl ? JSON.parse(dataEl.dataset.urls || '[]') : [];
+      let currentIdx = 0;
+
+      function showImage(idx) {
+        currentIdx = (idx + images.length) % images.length;
+        document.getElementById('modalImage').src = images[currentIdx];
+        document.getElementById('imageCounter').textContent = (currentIdx + 1) + ' / ' + images.length;
+      }
+
+      document.querySelectorAll('.product-image-thumb').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          currentIdx = parseInt(this.dataset.index, 10);
+          showImage(currentIdx);
+        });
+      });
+
+      document.getElementById('prevImage')?.addEventListener('click', function() { showImage(currentIdx - 1); });
+      document.getElementById('nextImage')?.addEventListener('click', function() { showImage(currentIdx + 1); });
+    })();
+  </script>
+<% end %>
+
+<dl class="row">
+  <dt class="col-sm-2">Slug</dt>
+  <dd class="col-sm-10"><%= @product.slug %></dd>
+
+  <dt class="col-sm-2">Stock</dt>
+  <dd class="col-sm-10">
+    <span class="<%= 'text-danger fw-bold' if @product.stock_quantity <= 5 %>"><%= @product.stock_quantity %></span>
+    <% if @product.stock_quantity <= 5 %>
+      <span class="badge bg-warning text-dark ms-1">Low stock</span>
+    <% end %>
+  </dd>
+
+  <dt class="col-sm-2">Price</dt>
+  <dd class="col-sm-10"><%= number_to_currency(@product.price / 100.0) %></dd>
+
+  <dt class="col-sm-2">Status</dt>
+  <dd class="col-sm-10">
+    <span class="badge bg-<%= @product.status == 'active' ? 'success' : (@product.status == 'draft' ? 'warning text-dark' : 'secondary') %>">
+      <%= @product.status %>
+    </span>
+  </dd>
+
+  <dt class="col-sm-2">Description</dt>
+  <dd class="col-sm-10"><%= @product.description.presence || "—" %></dd>
+
+  <dt class="col-sm-2">Add to cart</dt>
+  <dd class="col-sm-10">
+    <% if @product.status == "active" && @product.stock_quantity.positive? %>
+      <%= form_with url: admin_cart_add_path(product_id: @product.id), method: :post, local: true, class: "d-inline-flex align-items-center gap-2" do |f| %>
+        <%= f.number_field :quantity, value: 1, min: 1, max: @product.stock_quantity, class: "form-control form-control-sm", style: "width: 80px;" %>
+        <%= f.submit "Add to cart", class: "btn btn-success" %>
+      <% end %>
+    <% elsif @product.stock_quantity.zero? %>
+      <span class="text-muted">Out of stock</span>
+    <% else %>
+      <span class="text-muted">Product not available</span>
+    <% end %>
+  </dd>
+
+  <dt class="col-sm-2">Categories</dt>
+  <dd class="col-sm-10">
+    <% if @product.categories.any? %>
+      <% @product.categories.each do |cat| %>
+        <%= link_to cat.name, admin_category_path(cat), class: "badge bg-info text-decoration-none me-1" %>
+      <% end %>
+    <% else %>
+      —
+    <% end %>
+  </dd>
+</dl>
+  </div>
+</div>
+
+<%= link_to "← Back to products", admin_products_path, class: "btn btn-secondary mt-3" %>
+
+<% if @product.respond_to?(:versions) && @product.versions.any? %>
+  <div class="card mt-4">
+    <div class="card-header">Change history</div>
+    <ul class="list-group list-group-flush">
+      <% @product.versions.limit(10).each do |v| %>
+        <li class="list-group-item">
+          <span class="badge bg-secondary me-2"><%= v.event %></span>
+          <%= v.created_at.strftime("%Y-%m-%d %H:%M") %>
+          <% if v.whodunnit.present? %>
+            <span class="text-muted">by User #<%= v.whodunnit %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

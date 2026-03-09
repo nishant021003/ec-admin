@@ -1,0 +1,9 @@
+<h1 class="mb-4">Edit Category</h1>
+
+<div class="card">
+  <div class="card-body">
+    <%= render "form", category: @category %>
+  </div>
+</div>
+
+<%= link_to "← Back to category", admin_category_path(@category), class: "btn btn-secondary mt-3" %>

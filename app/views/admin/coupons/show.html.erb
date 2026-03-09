@@ -1,0 +1,52 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to "Coupons", admin_coupons_path %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @coupon.code %></li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0"><code><%= @coupon.code %></code></h1>
+  <div class="d-flex gap-2">
+    <%= link_to "Edit", edit_admin_coupon_path(@coupon), class: "btn btn-primary" %>
+    <%= button_to "Delete", admin_coupon_path(@coupon), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-2">Code</dt>
+      <dd class="col-sm-10"><code><%= @coupon.code %></code></dd>
+
+      <dt class="col-sm-2">Discount</dt>
+      <dd class="col-sm-10"><%= @coupon.discount_label %></dd>
+
+      <dt class="col-sm-2">Min cart value</dt>
+      <dd class="col-sm-10"><%= @coupon.min_cart_value.positive? ? number_to_currency(@coupon.min_cart_value / 100.0) : "None" %></dd>
+
+      <dt class="col-sm-2">Max discount</dt>
+      <dd class="col-sm-10"><%= @coupon.max_discount.present? && @coupon.max_discount.positive? ? number_to_currency(@coupon.max_discount / 100.0) : "—" %></dd>
+
+      <dt class="col-sm-2">Usage limit</dt>
+      <dd class="col-sm-10"><%= @coupon.usage_limit.present? ? @coupon.usage_limit : "Unlimited" %></dd>
+
+      <dt class="col-sm-2">Per user limit</dt>
+      <dd class="col-sm-10"><%= @coupon.per_user_limit.present? ? @coupon.per_user_limit : "Unlimited" %></dd>
+
+      <dt class="col-sm-2">Times used</dt>
+      <dd class="col-sm-10"><%= @coupon.coupon_usages.count %></dd>
+
+      <dt class="col-sm-2">Start date</dt>
+      <dd class="col-sm-10"><%= @coupon.start_date&.strftime("%Y-%m-%d") || "—" %></dd>
+
+      <dt class="col-sm-2">Expiry date</dt>
+      <dd class="col-sm-10"><%= @coupon.expiry_date&.strftime("%Y-%m-%d") || "—" %></dd>
+
+      <dt class="col-sm-2">Status</dt>
+      <dd class="col-sm-10"><span class="badge bg-<%= @coupon.active? ? 'success' : 'secondary' %>"><%= @coupon.status %></span></dd>
+    </dl>
+  </div>
+</div>
+
+<%= link_to "← Back to coupons", admin_coupons_path, class: "btn btn-secondary mt-3" %>

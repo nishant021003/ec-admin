@@ -1,0 +1,102 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to "Orders", admin_orders_path %></li>
+    <li class="breadcrumb-item active" aria-current="page">Order #<%= @order.id %></li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Order #<%= @order.id %></h1>
+  <div class="d-flex gap-2 align-items-center">
+    <%= form_with model: @order, url: admin_order_path(@order), method: :patch, class: "d-flex gap-2 align-items-center" do |f| %>
+      <%= f.select :status, Order::STATUSES.map { |s| [s.titleize, s] }, {}, class: "form-select form-select-sm w-auto" %>
+      <%= f.submit "Update status", class: "btn btn-sm btn-primary" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header">Line items</div>
+      <div class="table-responsive">
+      <table class="table table-sm table-striped table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Unit price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @order.order_line_items.any? %>
+            <% @order.order_line_items.includes(:product).each do |li| %>
+              <tr>
+                <td><%= link_to li.product.name, admin_product_path(li.product) %></td>
+                <td><%= li.quantity %></td>
+                <td><%= number_to_currency(li.unit_price_cents / 100.0) %></td>
+                <td><%= number_to_currency((li.quantity * li.unit_price_cents) / 100.0) %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr><td colspan="4" class="text-muted">No line items</td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      </div>
+      <div class="card-footer">
+        <% total_discount = (@order.coupon_discount || 0) + (@order.gift_card_discount || 0) %>
+        <% if total_discount.positive? %>
+          <div class="d-flex justify-content-end gap-3 mb-1">
+            <span>Subtotal: <%= number_to_currency(@order.total_amount / 100.0) %></span>
+            <% if @order.coupon_discount.to_i.positive? %>
+              <span class="text-success">Coupon: -<%= number_to_currency(@order.coupon_discount / 100.0) %></span>
+            <% end %>
+            <% if @order.gift_card_discount.to_i.positive? %>
+              <span class="text-success">Gift card: -<%= number_to_currency(@order.gift_card_discount / 100.0) %></span>
+            <% end %>
+          </div>
+          <% if @order.coupon %>
+            <div class="text-muted small text-end">Coupon: <%= @order.coupon.code %> (<%= @order.coupon.discount_label %>)</div>
+          <% end %>
+          <% if @order.gift_card %>
+            <div class="text-muted small text-end">Gift card: <%= @order.gift_card.code %></div>
+          <% end %>
+        <% end %>
+        <div class="text-end mt-1">
+          <strong>Total: <%= number_to_currency(@order.final_amount / 100.0) %></strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">Order details</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+        <dt class="col-sm-4">Customer</dt>
+        <dd class="col-sm-8"><%= @order.customer ? link_to(@order.customer.name, admin_customer_path(@order.customer)) : "—" %></dd>
+
+        <dt class="col-sm-4">Status</dt>
+        <dd class="col-sm-8"><span class="badge bg-secondary"><%= @order.status %></span></dd>
+
+        <dt class="col-sm-4">Created</dt>
+        <dd class="col-sm-8"><%= @order.created_at.strftime("%Y-%m-%d %H:%M") %></dd>
+
+        <% if @order.shipping_address_line1.present? %>
+          <dt class="col-sm-4">Shipping address</dt>
+          <dd class="col-sm-8">
+            <%= @order.shipping_address_line1 %><br>
+            <%= @order.shipping_address_line2 if @order.shipping_address_line2.present? %>
+            <%= [@order.shipping_city, @order.shipping_state, @order.shipping_postal_code].compact.join(", ") %><br>
+            <%= @order.shipping_country %>
+          </dd>
+        <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= link_to "← Back to orders", admin_orders_path, class: "btn btn-secondary mt-3" %>

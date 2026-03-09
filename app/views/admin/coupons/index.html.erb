@@ -1,0 +1,55 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Coupons</h1>
+  <%= link_to "New Coupon", new_admin_coupon_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Discount</th>
+            <th>Min cart</th>
+            <th>Used</th>
+            <th>Validity</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @coupons.each do |coupon| %>
+            <tr>
+              <td><code><%= coupon.code %></code></td>
+              <td><%= coupon.discount_label %></td>
+              <td><%= coupon.min_cart_value.positive? ? number_to_currency(coupon.min_cart_value / 100.0) : "—" %></td>
+              <td><%= coupon.coupon_usages.count %><%= " / #{coupon.usage_limit}" if coupon.usage_limit.present? %></td>
+              <td>
+                <% if coupon.start_date.present? || coupon.expiry_date.present? %>
+                  <%= coupon.start_date&.strftime("%Y-%m-%d") %> — <%= coupon.expiry_date&.strftime("%Y-%m-%d") %>
+                <% else %>
+                  Always
+                <% end %>
+              </td>
+              <td>
+                <span class="badge bg-<%= coupon.active? ? 'success' : 'secondary' %>"><%= coupon.status %></span>
+              </td>
+              <td>
+                <div class="d-flex gap-2 flex-wrap">
+                  <%= link_to "View", admin_coupon_path(coupon), class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to "Edit", edit_admin_coupon_path(coupon), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= button_to "Delete", admin_coupon_path(coupon), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-sm btn-outline-danger" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center mt-3">
+  <%= paginate @coupons %>
+</div>
