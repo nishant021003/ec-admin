@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Destroy in FK-safe order (orders first; coupon/gift_card destroy their usages/transactions)
 Order.destroy_all
 Product.destroy_all
 Category.destroy_all
@@ -27,6 +28,14 @@ User.create!(
 User.create!(
   name: "John Admin",
   email: "john@example.com",
+  password: "Password123!",
+  password_confirmation: "Password123!"
+).add_role :admin
+
+# Test user for placing orders and verifying gift card / coupon logic
+User.create!(
+  name: "Test User",
+  email: "test@example.com",
   password: "Password123!",
   password_confirmation: "Password123!"
 ).add_role :admin
@@ -288,6 +297,8 @@ GiftCard.create!([
   { code: "GC-USED-ZZZZ", initial_balance: 7500, balance: 0, status: "redeemed", expiry_date: 1.year.from_now.to_date }
 ])
 
-puts "Seeded admin users: admin@example.com, sarah@example.com, john@example.com / Password123!"
+puts "Seeded admin users: admin@example.com, sarah@example.com, john@example.com, test@example.com / Password123!"
+puts "  -> TEST USER: test@example.com / Password123! (use to place orders, test coupons & gift cards)"
+puts "  -> Sample gift cards: GC-100-XXXX ($100), GC-50-YYYY ($50), GC-25-PARTIAL ($12 balance)"
 puts "Seeded #{Category.count} categories, #{Product.count} products, #{Customer.count} customers, #{Order.count} orders."
 puts "Seeded #{Coupon.count} coupons, #{GiftCard.count} gift cards."

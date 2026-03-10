@@ -1,17 +1,17 @@
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><%= link_to "Products", admin_products_path %></li>
-    <li class="breadcrumb-item active" aria-current="page">Cart</li>
+    <li class="breadcrumb-item"><%= link_to t('nav.products'), admin_products_path %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= t('cart.title') %></li>
   </ol>
 </nav>
 
-<h1 class="mb-4">Cart</h1>
+<h1 class="mb-4"><%= t('cart.title') %></h1>
 
 <% if @cart_items.blank? %>
   <div class="alert alert-info">
-    Your cart is empty. <%= link_to "Browse products", admin_products_path, class: "alert-link" %> to add items.
+    <%= t('cart.empty_message') %> <%= link_to t('cart.browse_products'), admin_products_path, class: "alert-link" %>
   </div>
-  <%= link_to "← Back to products", admin_products_path, class: "btn btn-secondary" %>
+  <%= link_to "← #{t('cart.back_to_products')}", admin_products_path, class: "btn btn-secondary" %>
   <% return %>
 <% end %>
 
@@ -20,10 +20,10 @@
     <table class="table table-hover mb-0">
       <thead>
         <tr>
-          <th>Product</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Subtotal</th>
+          <th><%= t('columns.product') %></th>
+          <th><%= t('columns.price') %></th>
+          <th><%= t('columns.quantity') %></th>
+          <th><%= t('columns.subtotal') %></th>
           <th></th>
         </tr>
       </thead>
@@ -37,12 +37,12 @@
             <td>
               <%= form_with url: admin_cart_update_path(product_id: item[:product].id), method: :patch, class: "d-inline-flex align-items-center gap-1" do |f| %>
                 <%= f.number_field :quantity, value: item[:quantity], min: 1, max: item[:product].stock_quantity, class: "form-control form-control-sm", style: "width: 70px;" %>
-                <%= f.submit "Update", class: "btn btn-sm btn-outline-secondary" %>
+                <%= f.submit t('common.update'), class: "btn btn-sm btn-outline-secondary" %>
               <% end %>
             </td>
             <td><%= number_to_currency((item[:product].price * item[:quantity]) / 100.0) %></td>
             <td>
-              <%= button_to "Remove", admin_cart_remove_path(product_id: item[:product].id), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Remove from cart?" } } %>
+              <%= button_to t('common.remove'), admin_cart_remove_path(product_id: item[:product].id), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: t('cart.remove_from_cart') } } %>
             </td>
           </tr>
         <% end %>
@@ -50,12 +50,12 @@
     </table>
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">
-    <span class="text-muted"><%= @cart_items.size %> item(s)</span>
+    <span class="text-muted"><%= t('cart.items_count', count: @cart_items.size) %></span>
     <div>
-      <strong>Subtotal: <%= number_to_currency(@subtotal_cents / 100.0) %></strong>
-      <%= link_to "Proceed to checkout", admin_checkout_path, class: "btn btn-primary ms-3" %>
+      <strong><%= t('columns.subtotal') %>: <%= number_to_currency(@subtotal_cents / 100.0) %></strong>
+      <%= link_to t('cart.proceed_checkout'), admin_checkout_path, class: "btn btn-primary ms-3" %>
     </div>
   </div>
 </div>
 
-<%= link_to "← Continue shopping", admin_products_path, class: "btn btn-secondary" %>
+<%= link_to "← #{t('cart.continue_shopping')}", admin_products_path, class: "btn btn-secondary" %>

@@ -1,6 +1,6 @@
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><%= link_to "Gift cards", admin_gift_cards_path %></li>
+    <li class="breadcrumb-item"><%= link_to t('nav.gift_cards'), admin_gift_cards_path %></li>
     <li class="breadcrumb-item active" aria-current="page"><%= @gift_card.code %></li>
   </ol>
 </nav>
@@ -8,37 +8,65 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="mb-0"><code><%= @gift_card.code %></code></h1>
   <div class="d-flex gap-2">
-    <%= link_to "Edit", edit_admin_gift_card_path(@gift_card), class: "btn btn-primary" %>
-    <%= button_to "Delete", admin_gift_card_path(@gift_card), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-danger" %>
+    <%= link_to t('common.edit'), edit_admin_gift_card_path(@gift_card), class: "btn btn-primary" %>
+    <%= button_to t('common.delete'), admin_gift_card_path(@gift_card), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-danger" %>
   </div>
 </div>
 
 <div class="card">
   <div class="card-body">
     <dl class="row mb-0">
-      <dt class="col-sm-2">Code</dt>
+      <dt class="col-sm-2"><%= t('columns.code') %></dt>
       <dd class="col-sm-10"><code><%= @gift_card.code %></code></dd>
 
-      <dt class="col-sm-2">Initial balance</dt>
+      <dt class="col-sm-2"><%= t('columns.initial_balance') %></dt>
       <dd class="col-sm-10"><%= number_to_currency(@gift_card.initial_balance / 100.0) %></dd>
 
-      <dt class="col-sm-2">Current balance</dt>
+      <dt class="col-sm-2"><%= t('columns.current_balance') %></dt>
       <dd class="col-sm-10"><%= number_to_currency(@gift_card.balance / 100.0) %></dd>
 
-      <dt class="col-sm-2">Status</dt>
+      <dt class="col-sm-2"><%= t('columns.status') %></dt>
       <dd class="col-sm-10">
         <span class="badge bg-<%= @gift_card.status == 'active' ? 'success' : (@gift_card.status == 'redeemed' ? 'secondary' : 'danger') %>">
-          <%= @gift_card.status %>
+          <%= translate_status(@gift_card.status) %>
         </span>
       </dd>
 
-      <dt class="col-sm-2">Expiry date</dt>
-      <dd class="col-sm-10"><%= @gift_card.expiry_date&.strftime("%Y-%m-%d") || "Never" %></dd>
+      <dt class="col-sm-2"><%= t('columns.expires') %></dt>
+      <dd class="col-sm-10"><%= @gift_card.expiry_date&.strftime("%Y-%m-%d") || t('gift_cards.never') %></dd>
 
-      <dt class="col-sm-2">Redeemable</dt>
-      <dd class="col-sm-10"><%= @gift_card.redeemable? ? "Yes" : "No" %></dd>
+      <dt class="col-sm-2"><%= t('gift_cards.redeemable') %></dt>
+      <dd class="col-sm-10"><%= @gift_card.redeemable? ? t('gift_cards.yes') : t('gift_cards.no') %></dd>
     </dl>
   </div>
 </div>
 
-<%= link_to "← Back to gift cards", admin_gift_cards_path, class: "btn btn-secondary mt-3" %>
+<% if @gift_card.gift_card_transactions.any? %>
+  <div class="card mt-4">
+    <div class="card-header"><%= t('gift_cards.transaction_history') %></div>
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <thead>
+          <tr>
+            <th><%= t('gift_cards.date') %></th>
+            <th><%= t('gift_cards.type') %></th>
+            <th><%= t('gift_cards.amount') %></th>
+            <th><%= t('gift_cards.order') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @gift_card.gift_card_transactions.order(created_at: :desc).each do |txn| %>
+            <tr>
+              <td><%= txn.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+              <td><span class="badge bg-<%= txn.transaction_type == 'debit' ? 'danger' : 'success' %>"><%= txn.transaction_type == 'debit' ? t('gift_cards.debit') : t('gift_cards.credit') %></span></td>
+              <td><%= number_to_currency(txn.amount / 100.0) %></td>
+              <td><%= txn.order_id ? link_to(t('orders.order_number', id: txn.order_id), admin_order_path(txn.order_id)) : "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<%= link_to "← #{t('gift_cards.back_to_gift_cards')}", admin_gift_cards_path, class: "btn btn-secondary mt-3" %>

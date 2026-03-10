@@ -1,4 +1,4 @@
-<h1 class="mb-4">New Category</h1>
+<h1 class="mb-4"><%= t('page_titles.new_category') %></h1>
 
 <div class="card">
   <div class="card-body">
@@ -6,4 +6,4 @@
   </div>
 </div>
 
-<%= link_to "← Back to categories", admin_categories_path, class: "btn btn-secondary mt-3" %>
+<%= link_to "← #{t('categories.back_to_categories')}", admin_categories_path, class: "btn btn-secondary mt-3" %>

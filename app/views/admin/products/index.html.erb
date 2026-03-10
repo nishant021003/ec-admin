@@ -1,9 +1,9 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0">Products</h1>
+  <h1 class="mb-0"><%= t('products.title') %></h1>
   <div class="d-flex gap-2 flex-wrap">
-    <%= link_to "Export CSV", export_admin_products_path, class: "btn btn-outline-success btn-sm" %>
-    <%= link_to "Import CSV", "#importModal", data: { bs_toggle: "modal" }, class: "btn btn-outline-info btn-sm" %>
-    <%= link_to "New Product", new_admin_product_path, class: "btn btn-primary" %>
+    <%= link_to t('products.export_csv'), export_admin_products_path, class: "btn btn-outline-success btn-sm" %>
+    <%= link_to t('products.import_csv'), "#importModal", data: { bs_toggle: "modal" }, class: "btn btn-outline-info btn-sm" %>
+    <%= link_to t('products.new_product'), new_admin_product_path, class: "btn btn-primary" %>
   </div>
 </div>
 
@@ -11,22 +11,22 @@
   <div class="card-body">
     <div class="row g-2 align-items-end">
       <div class="col-md-2">
-        <%= f.text_field :q, value: params[:q], class: "form-control", placeholder: "Search..." %>
+        <%= f.text_field :q, value: params[:q], class: "form-control", placeholder: t('products.search_placeholder') %>
       </div>
       <div class="col-md-2">
-        <%= f.select :status, [["All statuses", ""], ["Active", "active"], ["Draft", "draft"], ["Archived", "archived"]], { selected: params[:status] }, class: "form-select" %>
+        <%= f.select :status, [[t('products.all_statuses'), ""], [t('status.active'), "active"], [t('status.draft'), "draft"], [t('status.archived'), "archived"]], { selected: params[:status] }, class: "form-select" %>
       </div>
       <div class="col-md-2">
-        <%= f.select :category_id, options_from_collection_for_select(Category.order(:name), :id, :name, params[:category_id]), { include_blank: "All categories" }, class: "form-select" %>
+        <%= f.select :category_id, options_from_collection_for_select(Category.order(:name), :id, :name, params[:category_id]), { include_blank: t('products.all_categories') }, class: "form-select" %>
       </div>
       <div class="col-md-2">
-        <%= f.number_field :min_price, value: params[:min_price], class: "form-control", placeholder: "Min price" %>
+        <%= f.number_field :min_price, value: params[:min_price], class: "form-control", placeholder: t('products.min_price') %>
       </div>
       <div class="col-md-2">
-        <%= f.number_field :max_price, value: params[:max_price], class: "form-control", placeholder: "Max price" %>
+        <%= f.number_field :max_price, value: params[:max_price], class: "form-control", placeholder: t('products.max_price') %>
       </div>
       <div class="col-md-2 ms-md-auto text-md-end">
-        <%= f.submit "Filter", class: "btn btn-secondary" %>
+        <%= f.submit t('common.filter'), class: "btn btn-secondary" %>
       </div>
     </div>
   </div>
@@ -36,11 +36,11 @@
   <div class="card mb-4">
     <div class="card-body py-2">
       <div class="d-flex gap-2 align-items-center flex-wrap">
-        <span class="text-muted small">Bulk actions:</span>
+        <span class="text-muted small"><%= t('products.bulk_actions') %>:</span>
         <%= f.hidden_field :bulk_action, value: "update", id: "bulk_action_type" %>
-        <%= f.select :bulk_status, [["-- Update status --", ""], ["Active", "active"], ["Draft", "draft"], ["Archived", "archived"]], {}, class: "form-select form-select-sm w-auto" %>
-        <button type="submit" class="btn btn-sm btn-outline-secondary">Update status</button>
-        <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('Delete selected products?')){ document.getElementById('bulk_action_type').value='destroy'; document.getElementById('bulk-form').submit(); }">Delete selected</button>
+        <%= f.select :bulk_status, [["-- #{t('products.update_status')} --", ""], [t('status.active'), "active"], [t('status.draft'), "draft"], [t('status.archived'), "archived"]], {}, class: "form-select form-select-sm w-auto" %>
+        <button type="submit" class="btn btn-sm btn-outline-secondary"><%= t('products.update_status') %></button>
+        <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('<%= t('common.confirm_delete') %>')){ document.getElementById('bulk_action_type').value='destroy'; document.getElementById('bulk-form').submit(); }"><%= t('products.delete_selected') %></button>
       </div>
     </div>
   </div>
@@ -51,14 +51,14 @@
   <table class="table table-striped table-hover mb-0">
     <thead>
       <tr>
-        <th><input type="checkbox" id="select-all" aria-label="Select all"></th>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Slug</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th><input type="checkbox" id="select-all" aria-label="<%= t('common.select_all') %>"></th>
+        <th><%= t('columns.image') %></th>
+        <th><%= t('columns.name') %></th>
+        <th><%= t('columns.slug') %></th>
+        <th><%= t('columns.price') %></th>
+        <th><%= t('columns.stock') %></th>
+        <th><%= t('columns.status') %></th>
+        <th><%= t('common.actions') %></th>
       </tr>
     </thead>
     <tbody>
@@ -82,17 +82,17 @@
           </td>
           <td>
             <span class="badge bg-<%= product.status == 'active' ? 'success' : (product.status == 'draft' ? 'warning text-dark' : 'secondary') %>">
-              <%= product.status %>
+              <%= translate_status(product.status) %>
             </span>
           </td>
           <td>
             <div class="d-flex gap-2 flex-wrap align-items-center">
               <% if product.status == "active" && product.stock_quantity.positive? %>
-                <%= link_to "Add to cart", admin_cart_add_path(product_id: product.id), data: { turbo_method: :post }, class: "btn btn-sm btn-success" %>
+                <%= link_to t('products.add_to_cart'), admin_cart_add_path(product_id: product.id), data: { turbo_method: :post }, class: "btn btn-sm btn-success" %>
               <% end %>
-              <%= link_to "View", admin_product_path(product), class: "btn btn-sm btn-outline-primary" %>
-              <%= link_to "Edit", edit_admin_product_path(product), class: "btn btn-sm btn-outline-secondary" %>
-              <%= link_to "Delete", admin_product_path(product), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+              <%= link_to t('common.view'), admin_product_path(product), class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to t('common.edit'), edit_admin_product_path(product), class: "btn btn-sm btn-outline-secondary" %>
+              <%= link_to t('common.delete'), admin_product_path(product), data: { turbo_method: :delete, turbo_confirm: t('common.confirm_delete') }, class: "btn btn-sm btn-outline-danger" %>
             </div>
           </td>
         </tr>
@@ -113,16 +113,16 @@
     <div class="modal-content">
       <%= form_with url: import_admin_products_path, method: :post, local: true, multipart: true do |f| %>
         <div class="modal-header">
-          <h5 class="modal-title">Import Products (CSV)</h5>
+          <h5 class="modal-title"><%= t('products.import_modal_title') %></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <p class="text-muted small">CSV should have columns: name, slug, description, price, status, stock_quantity, categories (semicolon-separated)</p>
+          <p class="text-muted small"><%= t('products.import_help') %></p>
           <%= f.file_field :file, accept: ".csv", class: "form-control" %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <%= f.submit "Import", class: "btn btn-primary" %>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('common.cancel') %></button>
+          <%= f.submit t('common.import'), class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>
@@ -134,7 +134,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="productImageModalTitle">Product image</h5>
+        <h5 class="modal-title" id="productImageModalTitle"><%= t('products.product_image') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center p-3">
@@ -151,7 +151,7 @@
   document.querySelectorAll('a[data-bs-target="#productImageModal"]').forEach(el => {
     el.addEventListener('click', function() {
       document.getElementById('productImageModalImg').src = this.dataset.imgSrc;
-      document.getElementById('productImageModalTitle').textContent = this.dataset.productName || 'Product image';
+      document.getElementById('productImageModalTitle').textContent = this.dataset.productName || '<%= j t('products.product_image') %>';
     });
   });
 </script>

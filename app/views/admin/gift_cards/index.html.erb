@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0">Gift cards</h1>
-  <%= link_to "New gift card", new_admin_gift_card_path, class: "btn btn-primary" %>
+  <h1 class="mb-0"><%= t('gift_cards.title') %></h1>
+  <%= link_to t('gift_cards.new_gift_card'), new_admin_gift_card_path, class: "btn btn-primary" %>
 </div>
 
 <div class="card">
@@ -9,12 +9,12 @@
       <table class="table table-striped table-hover mb-0">
         <thead>
           <tr>
-            <th>Code</th>
-            <th>Initial balance</th>
-            <th>Current balance</th>
-            <th>Status</th>
-            <th>Expires</th>
-            <th>Actions</th>
+            <th><%= t('columns.code') %></th>
+            <th><%= t('columns.initial_balance') %></th>
+            <th><%= t('columns.current_balance') %></th>
+            <th><%= t('columns.status') %></th>
+            <th><%= t('columns.expires') %></th>
+            <th><%= t('common.actions') %></th>
           </tr>
         </thead>
         <tbody>
@@ -25,15 +25,15 @@
               <td><%= number_to_currency(gc.balance / 100.0) %></td>
               <td>
                 <span class="badge bg-<%= gc.status == 'active' ? 'success' : (gc.status == 'redeemed' ? 'secondary' : 'danger') %>">
-                  <%= gc.status %>
+                  <%= translate_status(gc.status) %>
                 </span>
               </td>
               <td><%= gc.expiry_date&.strftime("%Y-%m-%d") || "—" %></td>
               <td>
                 <div class="d-flex gap-2 flex-wrap">
-                  <%= link_to "View", admin_gift_card_path(gc), class: "btn btn-sm btn-outline-primary" %>
-                  <%= link_to "Edit", edit_admin_gift_card_path(gc), class: "btn btn-sm btn-outline-secondary" %>
-                  <%= button_to "Delete", admin_gift_card_path(gc), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-sm btn-outline-danger" %>
+                  <%= link_to t('common.view'), admin_gift_card_path(gc), class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to t('common.edit'), edit_admin_gift_card_path(gc), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= button_to t('common.delete'), admin_gift_card_path(gc), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-sm btn-outline-danger" %>
                 </div>
               </td>
             </tr>

@@ -10,12 +10,12 @@
   <% end %>
 
   <div class="mb-3">
-    <%= f.label :name, class: "form-label" %>
+    <%= f.label :name, t('columns.name'), class: "form-label" %>
     <%= f.text_field :name, class: "form-control" %>
   </div>
 
   <div class="mb-3">
-    <%= f.label :email, class: "form-label" %>
+    <%= f.label :email, t('columns.email'), class: "form-label" %>
     <%= f.email_field :email, class: "form-control" %>
   </div>
 
@@ -25,9 +25,9 @@
   </div>
 
   <div class="mb-3">
-    <%= f.label :password_confirmation, class: "form-label" %>
+    <%= f.label :password_confirmation, t('forms.password_confirmation'), class: "form-label" %>
     <%= f.password_field :password_confirmation, class: "form-control" %>
   </div>
 
-  <%= f.submit customer.persisted? ? "Update Customer" : "Create Customer", class: "btn btn-primary" %>
+  <%= f.submit customer.persisted? ? t('forms.update_customer') : t('forms.create_customer'), class: "btn btn-primary" %>
 <% end %>

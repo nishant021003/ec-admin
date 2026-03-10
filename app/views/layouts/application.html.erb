@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title>EC Admin</title>
+    <title><%= t('app_name') %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,39 +11,39 @@
     <% if current_user %>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <%= link_to "EC Admin", admin_root_path, class: "navbar-brand" %>
+          <%= link_to t('app_name'), admin_root_path, class: "navbar-brand" %>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <%= link_to "Dashboard", admin_root_path, class: "nav-link #{'active' if controller_path == 'admin/dashboard'}" %>
+                <%= link_to t('nav.dashboard'), admin_root_path, class: "nav-link #{'active' if controller_path == 'admin/dashboard'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Products", admin_products_path, class: "nav-link #{'active' if controller_path == 'admin/products'}" %>
+                <%= link_to t('nav.products'), admin_products_path, class: "nav-link #{'active' if controller_path == 'admin/products'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Categories", admin_categories_path, class: "nav-link #{'active' if controller_path == 'admin/categories'}" %>
+                <%= link_to t('nav.categories'), admin_categories_path, class: "nav-link #{'active' if controller_path == 'admin/categories'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Orders", admin_orders_path, class: "nav-link #{'active' if controller_path == 'admin/orders'}" %>
+                <%= link_to t('nav.orders'), admin_orders_path, class: "nav-link #{'active' if controller_path == 'admin/orders'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Customers", admin_customers_path, class: "nav-link #{'active' if controller_path == 'admin/customers'}" %>
+                <%= link_to t('nav.customers'), admin_customers_path, class: "nav-link #{'active' if controller_path == 'admin/customers'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Admin users", admin_users_path, class: "nav-link #{'active' if controller_path == 'admin/users'}" %>
+                <%= link_to t('nav.admin_users'), admin_users_path, class: "nav-link #{'active' if controller_path == 'admin/users'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Coupons", admin_coupons_path, class: "nav-link #{'active' if controller_path == 'admin/coupons'}" %>
+                <%= link_to t('nav.coupons'), admin_coupons_path, class: "nav-link #{'active' if controller_path == 'admin/coupons'}" %>
               </li>
               <li class="nav-item">
-                <%= link_to "Gift cards", admin_gift_cards_path, class: "nav-link #{'active' if controller_path == 'admin/gift_cards'}" %>
+                <%= link_to t('nav.gift_cards'), admin_gift_cards_path, class: "nav-link #{'active' if controller_path == 'admin/gift_cards'}" %>
               </li>
               <li class="nav-item">
                 <%= link_to admin_cart_path, class: "nav-link #{'active' if controller_path == 'admin/cart'}" do %>
-                  Cart
+                  <%= t('nav.cart') %>
                   <% if cart_item_count.positive? %>
                     <span class="badge bg-primary ms-1"><%= cart_item_count %></span>
                   <% end %>
@@ -51,8 +51,17 @@
               </li>
             </ul>
             <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <%= t('language') %>: <%= I18n.locale == :ja ? '日本語' : 'English' %>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><%= link_to "English", switch_locale_path(locale: :en), class: "dropdown-item #{'active' if I18n.locale == :en}" %></li>
+                  <li><%= link_to "日本語", switch_locale_path(locale: :ja), class: "dropdown-item #{'active' if I18n.locale == :ja}" %></li>
+                </ul>
+              </li>
               <li class="nav-item">
-                <%= button_to "Sign out", admin_logout_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
+                <%= button_to t('nav.sign_out'), admin_logout_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
               </li>
             </ul>
           </div>

@@ -1,16 +1,16 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0">Customers</h1>
-  <%= link_to "New Customer", new_admin_customer_path, class: "btn btn-primary" %>
+  <h1 class="mb-0"><%= t('customers.title') %></h1>
+  <%= link_to t('customers.new_customer'), new_admin_customer_path, class: "btn btn-primary" %>
 </div>
 
 <%= form_with url: admin_customers_path, method: :get, class: "card mb-4" do |f| %>
   <div class="card-body">
     <div class="row g-2 align-items-end">
       <div class="col-md-4">
-        <%= f.text_field :q, value: params[:q], class: "form-control", placeholder: "Search by name or email..." %>
+        <%= f.text_field :q, value: params[:q], class: "form-control", placeholder: t('customers.search_placeholder') %>
       </div>
       <div class="col-md-2 ms-md-auto text-md-end">
-        <%= f.submit "Search", class: "btn btn-secondary" %>
+        <%= f.submit t('common.search'), class: "btn btn-secondary" %>
       </div>
     </div>
   </div>
@@ -22,9 +22,9 @@
 <table class="table table-striped table-hover mb-0">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Actions</th>
+      <th><%= t('columns.name') %></th>
+      <th><%= t('columns.email') %></th>
+      <th><%= t('common.actions') %></th>
     </tr>
   </thead>
   <tbody>
@@ -34,9 +34,9 @@
         <td><%= customer.email %></td>
         <td>
           <div class="d-flex gap-2 flex-wrap">
-            <%= link_to "View", admin_customer_path(customer), class: "btn btn-sm btn-outline-primary" %>
-            <%= link_to "Edit", edit_admin_customer_path(customer), class: "btn btn-sm btn-outline-secondary" %>
-            <%= button_to "Delete", admin_customer_path(customer), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-sm btn-outline-danger" %>
+            <%= link_to t('common.view'), admin_customer_path(customer), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to t('common.edit'), edit_admin_customer_path(customer), class: "btn btn-sm btn-outline-secondary" %>
+            <%= button_to t('common.delete'), admin_customer_path(customer), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-sm btn-outline-danger" %>
           </div>
         </td>
       </tr>

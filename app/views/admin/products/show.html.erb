@@ -1,6 +1,6 @@
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><%= link_to "Products", admin_products_path %></li>
+    <li class="breadcrumb-item"><%= link_to t('nav.products'), admin_products_path %></li>
     <li class="breadcrumb-item active" aria-current="page"><%= @product.name %></li>
   </ol>
 </nav>
@@ -8,8 +8,8 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="mb-0"><%= @product.name %></h1>
   <div class="d-flex gap-2">
-    <%= link_to "Edit", edit_admin_product_path(@product), class: "btn btn-primary" %>
-    <%= button_to "Delete", admin_product_path(@product), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-danger" %>
+    <%= link_to t('common.edit'), edit_admin_product_path(@product), class: "btn btn-primary" %>
+    <%= button_to t('common.delete'), admin_product_path(@product), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-danger" %>
   </div>
 </div>
 
@@ -17,11 +17,11 @@
   <div class="card-body">
 <% if @product.images.attached? %>
   <div class="mb-4">
-    <h6 class="text-muted mb-2">Product images (<%= @product.images.count %>) — click to view full size</h6>
+    <h6 class="text-muted mb-2"><%= t('products.product_images_count', count: @product.images.count) %></h6>
     <div class="d-flex flex-wrap gap-2">
       <% @product.images.each_with_index do |img, i| %>
         <a href="#" class="product-image-thumb" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="<%= url_for(img) %>" data-index="<%= i %>">
-          <%= image_tag img, class: "img-thumbnail", style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;", alt: "Image #{i + 1}" %>
+          <%= image_tag img, class: "img-thumbnail", style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;", alt: t('products.image_n', n: i + 1) %>
         </a>
       <% end %>
     </div>
@@ -33,18 +33,18 @@
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary">
           <span class="text-white" id="imageCounter">1 / <%= @product.images.count %></span>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
         </div>
         <div class="modal-body p-3 position-relative">
           <% if @product.images.count > 1 %>
-            <button type="button" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-2" id="prevImage" aria-label="Previous">
+            <button type="button" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-2" id="prevImage" aria-label="<%= t('common.prev') %>">
               ‹
             </button>
-            <button type="button" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-2" id="nextImage" aria-label="Next">
+            <button type="button" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-2" id="nextImage" aria-label="<%= t('common.next') %>">
               ›
             </button>
           <% end %>
-          <img id="modalImage" src="" alt="Product image" class="img-fluid d-block mx-auto rounded" style="max-height: 75vh;">
+          <img id="modalImage" src="" alt="<%= t('products.product_image') %>" class="img-fluid d-block mx-auto rounded" style="max-height: 75vh;">
         </div>
       </div>
     </div>
@@ -78,45 +78,45 @@
 <% end %>
 
 <dl class="row">
-  <dt class="col-sm-2">Slug</dt>
+  <dt class="col-sm-2"><%= t('columns.slug') %></dt>
   <dd class="col-sm-10"><%= @product.slug %></dd>
 
-  <dt class="col-sm-2">Stock</dt>
+  <dt class="col-sm-2"><%= t('columns.stock') %></dt>
   <dd class="col-sm-10">
     <span class="<%= 'text-danger fw-bold' if @product.stock_quantity <= 5 %>"><%= @product.stock_quantity %></span>
     <% if @product.stock_quantity <= 5 %>
-      <span class="badge bg-warning text-dark ms-1">Low stock</span>
+      <span class="badge bg-warning text-dark ms-1"><%= t('products.low_stock') %></span>
     <% end %>
   </dd>
 
-  <dt class="col-sm-2">Price</dt>
+  <dt class="col-sm-2"><%= t('columns.price') %></dt>
   <dd class="col-sm-10"><%= number_to_currency(@product.price / 100.0) %></dd>
 
-  <dt class="col-sm-2">Status</dt>
+  <dt class="col-sm-2"><%= t('columns.status') %></dt>
   <dd class="col-sm-10">
     <span class="badge bg-<%= @product.status == 'active' ? 'success' : (@product.status == 'draft' ? 'warning text-dark' : 'secondary') %>">
-      <%= @product.status %>
+      <%= translate_status(@product.status) %>
     </span>
   </dd>
 
-  <dt class="col-sm-2">Description</dt>
+  <dt class="col-sm-2"><%= t('products.description') %></dt>
   <dd class="col-sm-10"><%= @product.description.presence || "—" %></dd>
 
-  <dt class="col-sm-2">Add to cart</dt>
+  <dt class="col-sm-2"><%= t('products.add_to_cart_label') %></dt>
   <dd class="col-sm-10">
     <% if @product.status == "active" && @product.stock_quantity.positive? %>
       <%= form_with url: admin_cart_add_path(product_id: @product.id), method: :post, local: true, class: "d-inline-flex align-items-center gap-2" do |f| %>
         <%= f.number_field :quantity, value: 1, min: 1, max: @product.stock_quantity, class: "form-control form-control-sm", style: "width: 80px;" %>
-        <%= f.submit "Add to cart", class: "btn btn-success" %>
+        <%= f.submit t('products.add_to_cart'), class: "btn btn-success" %>
       <% end %>
     <% elsif @product.stock_quantity.zero? %>
-      <span class="text-muted">Out of stock</span>
+      <span class="text-muted"><%= t('products.out_of_stock') %></span>
     <% else %>
-      <span class="text-muted">Product not available</span>
+      <span class="text-muted"><%= t('products.not_available') %></span>
     <% end %>
   </dd>
 
-  <dt class="col-sm-2">Categories</dt>
+  <dt class="col-sm-2"><%= t('products.categories') %></dt>
   <dd class="col-sm-10">
     <% if @product.categories.any? %>
       <% @product.categories.each do |cat| %>
@@ -130,11 +130,11 @@
   </div>
 </div>
 
-<%= link_to "← Back to products", admin_products_path, class: "btn btn-secondary mt-3" %>
+<%= link_to "← #{t('products.back_to_products')}", admin_products_path, class: "btn btn-secondary mt-3" %>
 
 <% if @product.respond_to?(:versions) && @product.versions.any? %>
   <div class="card mt-4">
-    <div class="card-header">Change history</div>
+    <div class="card-header"><%= t('products.change_history') %></div>
     <ul class="list-group list-group-flush">
       <% @product.versions.limit(10).each do |v| %>
         <li class="list-group-item">

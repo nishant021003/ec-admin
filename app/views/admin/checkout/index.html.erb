@@ -1,26 +1,26 @@
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><%= link_to "Products", admin_products_path %></li>
-    <li class="breadcrumb-item"><%= link_to "Cart", admin_cart_path %></li>
-    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    <li class="breadcrumb-item"><%= link_to t('nav.products'), admin_products_path %></li>
+    <li class="breadcrumb-item"><%= link_to t('nav.cart'), admin_cart_path %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= t('checkout.title') %></li>
   </ol>
 </nav>
 
-<h1 class="mb-4">Checkout</h1>
+<h1 class="mb-4"><%= t('checkout.title') %></h1>
 
 <%= form_with url: admin_checkout_path, method: :post, local: true do |f| %>
   <div class="row">
     <div class="col-lg-7">
       <div class="card mb-4">
-        <div class="card-header">Order summary</div>
+        <div class="card-header"><%= t('checkout.order_summary') %></div>
         <div class="table-responsive">
           <table class="table table-sm mb-0">
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Unit price</th>
-                <th>Subtotal</th>
+                <th><%= t('columns.product') %></th>
+                <th><%= t('columns.qty') %></th>
+                <th><%= t('columns.unit_price') %></th>
+                <th><%= t('columns.subtotal') %></th>
               </tr>
             </thead>
             <tbody>
@@ -38,24 +38,24 @@
       </div>
 
       <div class="card mb-4">
-        <div class="card-header">Apply one discount</div>
+        <div class="card-header"><%= t('checkout.apply_discount') %></div>
         <div class="card-body">
-          <p class="text-muted small mb-3">You can use either a coupon code or a gift card code, not both.</p>
+          <p class="text-muted small mb-3"><%= t('checkout.discount_hint') %></p>
           <div class="mb-3">
             <div class="form-check">
               <%= f.radio_button :discount_type, "coupon", id: "discount_coupon", checked: params[:discount_type] != "gift_card", class: "form-check-input" %>
-              <%= f.label :discount_type, "Coupon code", for: "discount_coupon", class: "form-check-label" %>
+              <%= f.label :discount_type, t('checkout.coupon_code'), for: "discount_coupon", class: "form-check-label" %>
             </div>
             <div class="form-check">
               <%= f.radio_button :discount_type, "gift_card", id: "discount_gift_card", checked: params[:discount_type] == "gift_card", class: "form-check-input" %>
-              <%= f.label :discount_type, "Gift card code", for: "discount_gift_card", class: "form-check-label" %>
+              <%= f.label :discount_type, t('checkout.gift_card_code'), for: "discount_gift_card", class: "form-check-label" %>
             </div>
           </div>
           <div class="mb-3">
-            <%= f.text_field :discount_code, value: params[:discount_code], class: "form-control", placeholder: "Enter code (e.g. WELCOME10 or GC-100-XXXX)" %>
+            <%= f.text_field :discount_code, value: params[:discount_code], class: "form-control", placeholder: t('checkout.discount_placeholder') %>
           </div>
           <div class="mt-3">
-            <%= f.submit "Apply & Update", name: "apply", class: "btn btn-outline-secondary" %>
+            <%= f.submit t('checkout.apply_update'), name: "apply", class: "btn btn-outline-secondary" %>
           </div>
         </div>
       </div>
@@ -63,35 +63,35 @@
 
     <div class="col-lg-5">
       <div class="card mb-4">
-        <div class="card-header">Totals</div>
+        <div class="card-header"><%= t('checkout.totals') %></div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
-            <span>Subtotal</span>
+            <span><%= t('columns.subtotal') %></span>
             <span><%= number_to_currency(@subtotal_cents / 100.0) %></span>
           </li>
           <% if @discount_cents.positive? %>
             <li class="list-group-item d-flex justify-content-between text-success">
               <span>
-                Discount
+                <%= t('checkout.discount') %>
                 <% if @applied_coupon %>
                   <span class="badge bg-success ms-1"><%= @applied_coupon.code %>: <%= @applied_coupon.discount_label %></span>
                 <% end %>
                 <% if @applied_gift_card %>
-                  <span class="badge bg-info ms-1">Gift card: <%= @applied_gift_card.code %></span>
+                  <span class="badge bg-info ms-1"><%= t('checkout.gift_card') %>: <%= @applied_gift_card.code %></span>
                 <% end %>
               </span>
               <span>-<%= number_to_currency(@discount_cents / 100.0) %></span>
             </li>
           <% end %>
           <li class="list-group-item d-flex justify-content-between fs-5 fw-bold">
-            <span>Total</span>
+            <span><%= t('columns.total') %></span>
             <span><%= number_to_currency(@total_cents / 100.0) %></span>
           </li>
         </ul>
       </div>
 
-      <%= f.submit "Place order", class: "btn btn-success btn-lg w-100 mb-2" %>
-      <%= link_to "← Back to cart", admin_cart_path, class: "btn btn-outline-secondary w-100" %>
+      <%= f.submit t('checkout.place_order'), class: "btn btn-success btn-lg w-100 mb-2" %>
+      <%= link_to "← #{t('checkout.back_to_cart')}", admin_cart_path, class: "btn btn-outline-secondary w-100" %>
     </div>
   </div>
 <% end %>

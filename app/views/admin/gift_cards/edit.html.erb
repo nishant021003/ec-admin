@@ -1,4 +1,4 @@
-<h1 class="mb-4">Edit gift card</h1>
+<h1 class="mb-4"><%= t('page_titles.edit_gift_card') %></h1>
 
 <div class="card">
   <div class="card-body">
@@ -6,4 +6,4 @@
   </div>
 </div>
 
-<%= link_to "← Back to gift card", admin_gift_card_path(@gift_card), class: "btn btn-secondary mt-3" %>
+<%= link_to "← #{t('page_titles.back_to_gift_card')}", admin_gift_card_path(@gift_card), class: "btn btn-secondary mt-3" %>

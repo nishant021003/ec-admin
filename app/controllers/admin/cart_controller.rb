@@ -21,7 +21,7 @@ module Admin
       end
       qty = [(params[:quantity].presence || 1).to_i, 1].max
       add_to_cart(product.id, qty)
-      redirect_to admin_cart_path, notice: "Added #{product.name} to cart."
+      redirect_to admin_product_path(product), notice: "Added #{product.name} to cart."
     end
 
     def update

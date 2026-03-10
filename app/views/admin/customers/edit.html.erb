@@ -1,4 +1,4 @@
-<h1 class="mb-4">Edit Customer</h1>
+<h1 class="mb-4"><%= t('page_titles.edit_customer') %></h1>
 
 <div class="card">
   <div class="card-body">
@@ -6,4 +6,4 @@
   </div>
 </div>
 
-<%= link_to "← Back to customer", admin_customer_path(@customer), class: "btn btn-secondary mt-3" %>
+<%= link_to "← #{t('page_titles.back_to_customer')}", admin_customer_path(@customer), class: "btn btn-secondary mt-3" %>

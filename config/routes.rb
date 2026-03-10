@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get "locale/:locale", to: "locales#switch", as: :switch_locale
+
   namespace :admin do
     root "dashboard#index"
 

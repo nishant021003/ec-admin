@@ -11,6 +11,7 @@ class GiftCard < ApplicationRecord
   validates :status, presence: true, inclusion: { in: STATUSES }
 
   before_validation :normalize_code
+  before_validation :set_balance_from_initial, on: :create
 
   scope :active, -> { where(status: "active") }
 
@@ -50,6 +51,10 @@ class GiftCard < ApplicationRecord
   end
 
   private
+
+  def set_balance_from_initial
+    self.balance = initial_balance if balance.nil?
+  end
 
   def normalize_code
     self.code = code.to_s.upcase.strip.gsub(/\s+/, "") if code.present?

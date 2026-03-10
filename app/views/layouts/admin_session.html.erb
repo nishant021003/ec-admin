@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title>EC Admin - Sign In</title>
+    <title><%= t('app_name') %> - <%= t('auth.sign_in') %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -9,6 +9,10 @@
   </head>
   <body class="bg-light">
     <div class="container mt-5">
+      <div class="text-end mb-3">
+        <%= link_to "English", switch_locale_path(locale: :en), class: "btn btn-sm btn-outline-secondary me-1 #{'active' if I18n.locale == :en}" %>
+        <%= link_to "日本語", switch_locale_path(locale: :ja), class: "btn btn-sm btn-outline-secondary #{'active' if I18n.locale == :ja}" %>
+      </div>
       <div class="row justify-content-center">
         <div class="col-md-5">
           <%= yield %>

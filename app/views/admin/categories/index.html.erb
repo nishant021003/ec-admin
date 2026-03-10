@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0">Categories</h1>
-  <%= link_to "New Category", new_admin_category_path, class: "btn btn-primary" %>
+  <h1 class="mb-0"><%= t('categories.title') %></h1>
+  <%= link_to t('categories.new_category'), new_admin_category_path, class: "btn btn-primary" %>
 </div>
 
 <div class="card">
@@ -9,10 +9,10 @@
 <table class="table table-striped table-hover mb-0">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Slug</th>
-      <th>Parent</th>
-      <th>Actions</th>
+      <th><%= t('columns.name') %></th>
+      <th><%= t('columns.slug') %></th>
+      <th><%= t('columns.parent') %></th>
+      <th><%= t('common.actions') %></th>
     </tr>
   </thead>
   <tbody>
@@ -24,14 +24,14 @@
           <% if category.parent %>
             <%= link_to category.parent.name, admin_category_path(category.parent) %>
           <% else %>
-            <span class="text-muted">None</span>
+            <span class="text-muted"><%= t('common.none') %></span>
           <% end %>
         </td>
         <td>
           <div class="d-flex gap-2 flex-wrap">
-            <%= link_to "View", admin_category_path(category), class: "btn btn-sm btn-outline-primary" %>
-            <%= link_to "Edit", edit_admin_category_path(category), class: "btn btn-sm btn-outline-secondary" %>
-            <%= button_to "Delete", admin_category_path(category), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-sm btn-outline-danger" %>
+            <%= link_to t('common.view'), admin_category_path(category), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to t('common.edit'), edit_admin_category_path(category), class: "btn btn-sm btn-outline-secondary" %>
+            <%= button_to t('common.delete'), admin_category_path(category), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-sm btn-outline-danger" %>
           </div>
         </td>
       </tr>

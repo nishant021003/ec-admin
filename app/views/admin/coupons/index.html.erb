@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0">Coupons</h1>
-  <%= link_to "New Coupon", new_admin_coupon_path, class: "btn btn-primary" %>
+  <h1 class="mb-0"><%= t('coupons.title') %></h1>
+  <%= link_to t('coupons.new_coupon'), new_admin_coupon_path, class: "btn btn-primary" %>
 </div>
 
 <div class="card">
@@ -9,13 +9,13 @@
       <table class="table table-striped table-hover mb-0">
         <thead>
           <tr>
-            <th>Code</th>
-            <th>Discount</th>
-            <th>Min cart</th>
-            <th>Used</th>
-            <th>Validity</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th><%= t('columns.code') %></th>
+            <th><%= t('columns.discount') %></th>
+            <th><%= t('columns.min_cart') %></th>
+            <th><%= t('columns.used') %></th>
+            <th><%= t('columns.validity') %></th>
+            <th><%= t('columns.status') %></th>
+            <th><%= t('common.actions') %></th>
           </tr>
         </thead>
         <tbody>
@@ -29,17 +29,17 @@
                 <% if coupon.start_date.present? || coupon.expiry_date.present? %>
                   <%= coupon.start_date&.strftime("%Y-%m-%d") %> — <%= coupon.expiry_date&.strftime("%Y-%m-%d") %>
                 <% else %>
-                  Always
+                  <%= t('coupons.always') %>
                 <% end %>
               </td>
               <td>
-                <span class="badge bg-<%= coupon.active? ? 'success' : 'secondary' %>"><%= coupon.status %></span>
+                <span class="badge bg-<%= coupon.active? ? 'success' : 'secondary' %>"><%= translate_status(coupon.status) %></span>
               </td>
               <td>
                 <div class="d-flex gap-2 flex-wrap">
-                  <%= link_to "View", admin_coupon_path(coupon), class: "btn btn-sm btn-outline-primary" %>
-                  <%= link_to "Edit", edit_admin_coupon_path(coupon), class: "btn btn-sm btn-outline-secondary" %>
-                  <%= button_to "Delete", admin_coupon_path(coupon), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } }, class: "btn btn-sm btn-outline-danger" %>
+                  <%= link_to t('common.view'), admin_coupon_path(coupon), class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to t('common.edit'), edit_admin_coupon_path(coupon), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= button_to t('common.delete'), admin_coupon_path(coupon), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-sm btn-outline-danger" %>
                 </div>
               </td>
             </tr>

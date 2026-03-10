@@ -1,4 +1,4 @@
-<h1 class="mb-4">Edit Coupon</h1>
+<h1 class="mb-4"><%= t('page_titles.edit_coupon') %></h1>
 
 <div class="card">
   <div class="card-body">
@@ -6,4 +6,4 @@
   </div>
 </div>
 
-<%= link_to "← Back to coupon", admin_coupon_path(@coupon), class: "btn btn-secondary mt-3" %>
+<%= link_to "← #{t('page_titles.back_to_coupon')}", admin_coupon_path(@coupon), class: "btn btn-secondary mt-3" %>
