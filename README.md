@@ -72,3 +72,4 @@ bundle exec rspec
 - **Bulk actions**: Bulk update status, bulk delete products
 - **Admin user management**: Add/edit/delete admin users with Rolify roles
 - **Audit trail**: PaperTrail on Product, Order, User for change history
+# ec-admin
