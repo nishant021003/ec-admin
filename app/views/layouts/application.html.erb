@@ -42,6 +42,9 @@
                 <%= link_to t('nav.gift_cards'), admin_gift_cards_path, class: "nav-link #{'active' if controller_path == 'admin/gift_cards'}" %>
               </li>
               <li class="nav-item">
+                <%= link_to t('nav.product_combos'), admin_product_combos_path, class: "nav-link #{'active' if controller_path == 'admin/product_combos'}" %>
+              </li>
+              <li class="nav-item">
                 <%= link_to admin_cart_path, class: "nav-link #{'active' if controller_path == 'admin/cart'}" do %>
                   <%= t('nav.cart') %>
                   <% if cart_item_count.positive? %>

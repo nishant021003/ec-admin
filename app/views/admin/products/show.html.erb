@@ -105,9 +105,14 @@
   <dt class="col-sm-2"><%= t('products.add_to_cart_label') %></dt>
   <dd class="col-sm-10">
     <% if @product.status == "active" && @product.stock_quantity.positive? %>
-      <%= form_with url: admin_cart_add_path(product_id: @product.id), method: :post, local: true, class: "d-inline-flex align-items-center gap-2" do |f| %>
+      <%= form_with url: admin_cart_add_path(product_id: @product.id), method: :post, local: true, class: "d-inline-flex align-items-center gap-2 me-2" do |f| %>
         <%= f.number_field :quantity, value: 1, min: 1, max: @product.stock_quantity, class: "form-control form-control-sm", style: "width: 80px;" %>
         <%= f.submit t('products.add_to_cart'), class: "btn btn-success" %>
+      <% end %>
+      <%= form_with url: admin_cart_add_path(product_id: @product.id), method: :post, local: true, class: "d-inline-flex align-items-center gap-2" do |f| %>
+        <%= f.hidden_field :free_gift, value: "1" %>
+        <%= f.number_field :quantity, value: 1, min: 1, max: 999, class: "form-control form-control-sm", style: "width: 80px;" %>
+        <%= f.submit t('products.add_as_free_gift'), class: "btn btn-outline-info" %>
       <% end %>
     <% elsif @product.stock_quantity.zero? %>
       <span class="text-muted"><%= t('products.out_of_stock') %></span>

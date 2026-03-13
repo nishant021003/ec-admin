@@ -1,0 +1,55 @@
+---
+alwaysApply: true
+---
+# Documentation Usage Rules – ec-admin-docs
+
+When answering prompts, read files from `ec-admin-docs/` as follows:
+
+## When to read which docs
+
+1. **Project overview / goals / scope / milestones**
+   - Read `ec-admin-docs/ec-admin-state.md`
+   - Read `ec-admin-docs/inception/plans/project-plan.md`
+
+2. **Architecture / system design**
+   - Read `ec-admin-docs/inception/application-design/system-architecture.md`
+   - Read `ec-admin-docs/ec-admin-state.md` for phase status
+
+3. **Product / category / product image**
+   - Data shape and API contract: read `ec-admin-docs/construction/units/product-service/data-contract.md`
+
+4. **Order / order item / free gift / product combo / promotion / coupon**
+   - Data shape and API contract: read `ec-admin-docs/construction/units/order-service/data-contract.md`
+   - Lifecycle and behaviour: read `ec-admin-docs/construction/units/order-service/functional-design.md`
+
+5. **Business / functional requirements**
+   - Read `ec-admin-docs/inception/requirements/business-requirements.md`
+   - Read `ec-admin-docs/inception/requirements/functional-requirements.md`
+
+6. **Data acquisition / seeds / rake / backfill**
+   - Read `ec-admin-docs/inception/plans/data-acquisition-plan.md`
+
+7. **Risks / mitigations**
+   - Read `ec-admin-docs/inception/plans/risk-management-plan.md`
+
+8. **Testing / RSpec / SimpleCov / quality**
+   - Read `ec-admin-docs/construction/build-and-test/test-strategy.md`
+
+9. **Monitoring / alerting / ops**
+   - Read `ec-admin-docs/operations/monitoring-and-alerting.md`
+
+10. **Past decisions / audit log**
+    - Read `ec-admin-docs/audit.md`
+
+## General rules
+
+- Before changing models, controllers, or APIs related to products/orders/customers: read the relevant `data-contract.md` and `functional-design.md`.
+- Before adding tests or changing the test setup: read `ec-admin-docs/construction/build-and-test/test-strategy.md`.
+- When the user asks about "how we decided X" or "why we did Y": read `ec-admin-docs/audit.md`.
+
+## Keep docs in sync
+
+- **After implementing features** (new models, controllers, flows): update `ec-admin-docs/` accordingly.
+- **After architectural or schema changes**: update `ec-admin-docs/inception/application-design/system-architecture.md`, relevant `data-contract.md` and `functional-design.md`, and `ec-admin-state.md`.
+- **When requirements change**: update `business-requirements.md` and `functional-requirements.md`.
+- **When adding milestones**: update `ec-admin-state.md` and `project-plan.md`.

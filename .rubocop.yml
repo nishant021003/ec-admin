@@ -1,0 +1,9 @@
+# Inherit from rubocop-rails-omakase; override cops that cause CI failures
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: no_space

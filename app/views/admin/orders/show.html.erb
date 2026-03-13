@@ -32,11 +32,16 @@
         <tbody>
           <% if @order.order_line_items.any? %>
             <% @order.order_line_items.includes(:product).each do |li| %>
-              <tr>
-                <td><%= link_to li.product.name, admin_product_path(li.product) %></td>
+              <tr class="<%= 'table-success' if li.is_free_gift %>">
+                <td>
+                  <%= link_to li.product.name, admin_product_path(li.product) %>
+                  <% if li.is_free_gift %>
+                    <span class="badge bg-info ms-1"><%= t('cart.free_gift') %></span>
+                  <% end %>
+                </td>
                 <td><%= li.quantity %></td>
-                <td><%= number_to_currency(li.unit_price_cents / 100.0) %></td>
-                <td><%= number_to_currency((li.quantity * li.unit_price_cents) / 100.0) %></td>
+                <td><%= li.is_free_gift ? t('cart.free') : number_to_currency(li.unit_price_cents / 100.0) %></td>
+                <td><%= li.is_free_gift ? t('cart.free') : number_to_currency((li.quantity * li.unit_price_cents) / 100.0) %></td>
               </tr>
             <% end %>
           <% else %>

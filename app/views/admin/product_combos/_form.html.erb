@@ -1,0 +1,66 @@
+<%= form_with model: product_combo, url: product_combo.persisted? ? admin_product_combo_path(product_combo) : admin_product_combos_path, method: product_combo.persisted? ? :patch : :post, local: true do |f| %>
+  <% if product_combo.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% product_combo.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label"><%= t('product_combos.trigger_products') %></label>
+      <select name="product_combo[trigger_product_ids][]" multiple class="form-select" size="6">
+        <% Product.order(:name).each do |p| %>
+          <option value="<%= p.id %>" <%= 'selected' if product_combo.product_combo_triggers.any? { |t| t.product_id == p.id } %>><%= p.name %></option>
+        <% end %>
+      </select>
+      <small class="text-muted"><%= t('product_combos.multi_select_hint') %></small>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label"><%= t('product_combos.trigger_quantity') %></label>
+      <input type="number" name="product_combo[trigger_quantity]" class="form-control" min="1" value="<%= product_combo.product_combo_triggers.first&.quantity || 1 %>">
+      <small class="text-muted"><%= t('product_combos.trigger_quantity_hint') %></small>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="form-label"><%= t('product_combos.free_products') %></label>
+      <select name="product_combo[free_product_ids][]" multiple class="form-select" size="6">
+        <% Product.order(:name).each do |p| %>
+          <option value="<%= p.id %>" <%= 'selected' if product_combo.product_combo_free_products.any? { |f| f.product_id == p.id } %>><%= p.name %></option>
+        <% end %>
+      </select>
+      <small class="text-muted"><%= t('product_combos.multi_select_hint') %></small>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label"><%= t('product_combos.free_quantity') %></label>
+      <input type="number" name="product_combo[free_quantity]" class="form-control" min="1" value="<%= product_combo.product_combo_free_products.first&.quantity || 1 %>">
+      <small class="text-muted"><%= t('product_combos.free_quantity_hint') %></small>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <%= f.label :valid_from, t('product_combos.valid_from'), class: "form-label" %>
+      <%= f.date_field :valid_from, class: "form-control" %>
+    </div>
+    <div class="col-md-4 mb-3">
+      <%= f.label :valid_to, t('product_combos.valid_to'), class: "form-label" %>
+      <%= f.date_field :valid_to, class: "form-control" %>
+    </div>
+    <div class="col-md-4 mb-3">
+      <%= f.label :is_active, t('columns.status'), class: "form-label" %>
+      <%= f.select :is_active, [[t('status.active'), true], [t('status.inactive'), false]], {}, class: "form-select" %>
+    </div>
+  </div>
+
+  <%= f.submit product_combo.persisted? ? t('product_combos.update') : t('product_combos.create'), class: "btn btn-primary" %>
+<% end %>

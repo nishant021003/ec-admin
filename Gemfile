@@ -11,6 +11,7 @@ gem "rolify", "~> 6.0"
 gem "kaminari", "~> 1.2"
 gem "paper_trail", "~> 15.0"
 gem "image_processing", "~> 1.2"
+gem "csv"
 
 gem "bootsnap", "~> 1.18", require: false
 gem "puma", "~> 6.0"

@@ -1,0 +1,63 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0"><%= t('product_combos.title') %></h1>
+  <%= link_to t('product_combos.new_combo'), new_admin_product_combo_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+        <thead>
+          <tr>
+            <th><%= t('product_combos.trigger') %></th>
+            <th><%= t('product_combos.free_product') %></th>
+            <th><%= t('product_combos.validity') %></th>
+            <th><%= t('columns.status') %></th>
+            <th><%= t('common.actions') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @product_combos.each do |combo| %>
+            <tr>
+              <td>
+                <% combo.product_combo_triggers.each do |t| %>
+                  <span class="badge bg-secondary me-1"><%= link_to "#{t.quantity}× #{t.product.name}", admin_product_path(t.product), class: "text-white text-decoration-none" %></span>
+                <% end %>
+              </td>
+              <td>
+                <% combo.product_combo_free_products.each do |f| %>
+                  <span class="badge bg-info me-1"><%= link_to "#{f.quantity}× #{f.product.name}", admin_product_path(f.product), class: "text-white text-decoration-none" %></span>
+                <% end %>
+              </td>
+              <td>
+                <% if combo.valid_from.present? || combo.valid_to.present? %>
+                  <%= combo.valid_from&.strftime("%Y-%m-%d") %> — <%= combo.valid_to&.strftime("%Y-%m-%d") %>
+                <% else %>
+                  —
+                <% end %>
+              </td>
+              <td>
+                <span class="badge bg-<%= combo.is_active ? 'success' : 'secondary' %>"><%= combo.is_active ? t('status.active') : t('status.inactive') %></span>
+              </td>
+              <td>
+                <div class="d-flex gap-2 flex-wrap">
+                  <%= link_to t('common.view'), admin_product_combo_path(combo), class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to t('common.edit'), edit_admin_product_combo_path(combo), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= button_to t('common.delete'), admin_product_combo_path(combo), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-sm btn-outline-danger" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% if @product_combos.empty? %>
+  <div class="alert alert-info mt-3"><%= t('product_combos.no_combos') %></div>
+<% end %>
+
+<div class="d-flex justify-content-center mt-3">
+  <%= paginate @product_combos %>
+</div>

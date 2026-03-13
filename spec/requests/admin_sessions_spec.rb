@@ -3,6 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Admin sessions", type: :request do
+  describe "unauthenticated access" do
+    it "redirects to login when accessing admin path without signing in" do
+      get admin_products_path
+      expect(response).to redirect_to(admin_login_path)
+      expect(flash[:alert]).to be_present
+    end
+  end
+
   describe "GET /admin/login" do
     it "renders the login form" do
       get admin_login_path
@@ -32,6 +40,17 @@ RSpec.describe "Admin sessions", type: :request do
       post admin_login_path, params: { email: user.email, password: "wrong" }
       expect(response).to have_http_status(:unprocessable_entity)
       expect(session[:user_id]).to be_nil
+    end
+  end
+
+  describe "DELETE /admin/logout" do
+    it "signs out the user" do
+      user = create(:user)
+      user.add_role :admin
+      post admin_login_path, params: { email: user.email, password: "Password123!" }
+      delete admin_logout_path
+      expect(session[:user_id]).to be_nil
+      expect(response).to redirect_to(admin_login_path)
     end
   end
 end

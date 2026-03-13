@@ -2,6 +2,7 @@
 
 # Destroy in FK-safe order (orders first; coupon/gift_card destroy their usages/transactions)
 Order.destroy_all
+ProductCombo.destroy_all
 Product.destroy_all
 Category.destroy_all
 Customer.destroy_all
@@ -289,6 +290,24 @@ Coupon.create!([
   { code: "EXPIRED50", discount_type: "percentage", discount_value: 50, min_cart_value: 0, usage_limit: 10, expiry_date: 1.day.ago.to_date, status: "active" }
 ])
 
+# Product combos (Buy X get Y free, supports multiple triggers and free products)
+nike = Product.find_by(name: "Nike Air Zoom Running Shoes")
+wallet = Product.find_by(name: "Leather Wallet")
+headphones = Product.find_by(name: "Sony WH-1000XM5 Headphones")
+if nike && wallet
+  combo = ProductCombo.create!(is_active: true)
+  combo.product_combo_triggers.create!(product: nike, quantity: 2)
+  combo.product_combo_free_products.create!(product: wallet, quantity: 1)
+end
+book = Product.find_by(name: "The Pragmatic Programmer")
+if nike && headphones && wallet && book
+  combo2 = ProductCombo.create!(is_active: true)
+  combo2.product_combo_triggers.create!(product: nike, quantity: 1)
+  combo2.product_combo_triggers.create!(product: headphones, quantity: 1)
+  combo2.product_combo_free_products.create!(product: wallet, quantity: 1)
+  combo2.product_combo_free_products.create!(product: book, quantity: 1)
+end
+
 # Gift cards (new schema: initial_balance, balance, expiry_date)
 GiftCard.create!([
   { code: "GC-100-XXXX", initial_balance: 10000, balance: 10000, status: "active", expiry_date: 1.year.from_now.to_date },
@@ -301,4 +320,4 @@ puts "Seeded admin users: admin@example.com, sarah@example.com, john@example.com
 puts "  -> TEST USER: test@example.com / Password123! (use to place orders, test coupons & gift cards)"
 puts "  -> Sample gift cards: GC-100-XXXX ($100), GC-50-YYYY ($50), GC-25-PARTIAL ($12 balance)"
 puts "Seeded #{Category.count} categories, #{Product.count} products, #{Customer.count} customers, #{Order.count} orders."
-puts "Seeded #{Coupon.count} coupons, #{GiftCard.count} gift cards."
+puts "Seeded #{ProductCombo.count} product combos, #{Coupon.count} coupons, #{GiftCard.count} gift cards."

@@ -47,13 +47,14 @@ class GiftCard < ApplicationRecord
         amount: amount,
         transaction_type: "debit"
       )
+      true
     end
   end
 
   private
 
   def set_balance_from_initial
-    self.balance = initial_balance if balance.nil?
+    self.balance = initial_balance if new_record? && initial_balance.present?
   end
 
   def normalize_code

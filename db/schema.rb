@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_03_06_100001) do
+ActiveRecord::Schema[8.1].define(version: 2025_03_11_100001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -121,6 +121,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_03_06_100001) do
 
   create_table "order_line_items", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "is_free_gift", default: false, null: false
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false
     t.integer "quantity", default: 1, null: false
@@ -162,6 +163,37 @@ ActiveRecord::Schema[8.1].define(version: 2025_03_06_100001) do
     t.index ["category_id"], name: "index_product_categories_on_category_id"
     t.index ["product_id", "category_id"], name: "index_product_categories_on_product_id_and_category_id", unique: true
     t.index ["product_id"], name: "index_product_categories_on_product_id"
+  end
+
+  create_table "product_combo_free_products", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "product_combo_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_combo_id", "product_id"], name: "index_product_combo_free_products_on_combo_and_product", unique: true
+    t.index ["product_combo_id"], name: "index_product_combo_free_products_on_product_combo_id"
+    t.index ["product_id"], name: "index_product_combo_free_products_on_product_id"
+  end
+
+  create_table "product_combo_triggers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "product_combo_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_combo_id", "product_id"], name: "index_product_combo_triggers_on_combo_and_product", unique: true
+    t.index ["product_combo_id"], name: "index_product_combo_triggers_on_product_combo_id"
+    t.index ["product_id"], name: "index_product_combo_triggers_on_product_id"
+  end
+
+  create_table "product_combos", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "is_active", default: true, null: false
+    t.datetime "updated_at", null: false
+    t.date "valid_from"
+    t.date "valid_to"
+    t.index ["is_active"], name: "index_product_combos_on_is_active"
   end
 
   create_table "products", force: :cascade do |t|
@@ -229,4 +261,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_03_06_100001) do
   add_foreign_key "orders", "users"
   add_foreign_key "product_categories", "categories"
   add_foreign_key "product_categories", "products"
+  add_foreign_key "product_combo_free_products", "product_combos"
+  add_foreign_key "product_combo_free_products", "products"
+  add_foreign_key "product_combo_triggers", "product_combos"
+  add_foreign_key "product_combo_triggers", "products"
 end

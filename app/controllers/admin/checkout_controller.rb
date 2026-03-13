@@ -80,12 +80,14 @@ module Admin
         cart_items.each do |item|
           product = item[:product]
           qty = item[:quantity]
+          free_gift = item[:is_free_gift]
           raise "Insufficient stock" if product.stock_quantity < qty
 
           order.order_line_items.create!(
             product: product,
             quantity: qty,
-            unit_price_cents: product.price
+            unit_price_cents: free_gift ? 0 : product.price,
+            is_free_gift: free_gift
           )
           product.update_column(:stock_quantity, product.stock_quantity - qty)
         end

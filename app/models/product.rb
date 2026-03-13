@@ -5,6 +5,8 @@ class Product < ApplicationRecord
   has_many :categories, through: :product_categories
   has_many :order_line_items, dependent: :restrict_with_exception
   has_many :coupon_products, dependent: :destroy
+  has_many :product_combo_triggers, dependent: :destroy
+  has_many :product_combo_free_products, dependent: :destroy
 
   has_many_attached :images
 

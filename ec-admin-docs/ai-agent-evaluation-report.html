@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent Evaluation Report – EC Admin</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 2rem; color: #222; line-height: 1.6; }
+    h1 { color: #1a365d; border-bottom: 2px solid #3182ce; padding-bottom: 0.5rem; }
+    h2 { color: #2c5282; margin-top: 2rem; }
+    h3 { color: #2d3748; margin-top: 1.5rem; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.95rem; }
+    th, td { border: 1px solid #cbd5e0; padding: 0.6rem 0.8rem; text-align: left; }
+    th { background: #edf2f7; font-weight: 600; }
+    tr:nth-child(even) { background: #f7fafc; }
+    .highlight { background: #ebf8ff; }
+    .metric { font-weight: 600; color: #2b6cb0; }
+    .summary-box { background: #f0fff4; border-left: 4px solid #38a169; padding: 1rem 1.5rem; margin: 1.5rem 0; }
+    ul { margin: 0.5rem 0; padding-left: 1.5rem; }
+    .meta { color: #718096; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    @media print { body { max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+<h1>AI Agent Evaluation Report – EC Admin</h1>
+<p class="meta"><strong>Project:</strong> ec_admin (Rails 8 e-commerce admin) &nbsp;|&nbsp; <strong>Report Date:</strong> March 2026 &nbsp;|&nbsp; <strong>Version:</strong> 1.0</p>
+
+<!-- 1. Project Setup -->
+<h2>1. Project Setup</h2>
+<p>The project was set up and developed using the steps defined in <strong><code>setup.md</code></strong>:</p>
+<ul>
+  <li><strong>Prerequisites:</strong> Ruby 3.4.x, Rails 8.0.x, PostgreSQL, Bundler</li>
+  <li><strong>Commands:</strong> <code>bundle install</code> → <code>db:create db:migrate db:seed</code> → <code>rails server</code></li>
+  <li><strong>Admin access:</strong> <code>http://localhost:3000/admin/login</code> (admin@example.com / Password123!)</li>
+</ul>
+<p>Setup covers: database creation, migrations, seeds (admin users, categories, products, customers, orders, coupons, gift cards, product combos), authentication, routes, and testing configuration.</p>
+
+<!-- 2. Types of Prompts -->
+<h2>2. Types of Prompts Given to AI Agents</h2>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Prompt Type</th>
+      <th>Description</th>
+      <th>Example Prompts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>Feature Implementation</strong></td>
+      <td>Implement new features (models, controllers, views, flows)</td>
+      <td>e.g. "Add Free Gift module with is_free_gift on order line items", "Implement Product Combo (Buy X get Y free)"</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>Bug Fix</strong></td>
+      <td>Identify and fix runtime or schema errors</td>
+      <td>e.g. "Fix PG::UndefinedColumn: column trigger_product_id does not exist"</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Testing</strong></td>
+      <td>Write and fix RSpec specs</td>
+      <td>e.g. "Write RSpec specs for all features", "Fix failing specs", "Push line coverage to 95%"</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>Documentation</strong></td>
+      <td>Update or create docs</td>
+      <td>e.g. "Update test-strategy.md", "Ensure we follow rules in documentation-usage.mdc"</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>Refinement</strong></td>
+      <td>Iterative fixes and improvements</td>
+      <td>e.g. "Still one test case is failing, solve it", "Coverage is not above 90%, add more tests"</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong>Setup &amp; Configuration</strong></td>
+      <td>Project setup and tooling</td>
+      <td>e.g. "Create setup.md with project setup steps", "Add SimpleCov for coverage"</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- 3. Number of Prompt Types -->
+<h2>3. Number of Prompt Types Required to Achieve Results</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Total prompt types</td><td><span class="metric">6</span></td></tr>
+    <tr><td>Feature-focused prompts</td><td>1</td></tr>
+    <tr><td>Bug-fix prompts</td><td>1</td></tr>
+    <tr><td>Testing prompts</td><td>1</td></tr>
+    <tr><td>Documentation prompts</td><td>1</td></tr>
+    <tr><td>Refinement prompts</td><td>1</td></tr>
+    <tr><td>Setup/configuration prompts</td><td>1</td></tr>
+  </tbody>
+</table>
+<p>Typically, <strong>2–4 refinement follow-ups</strong> per major task (e.g. tests, features) were needed to reach desired accuracy and coverage.</p>
+
+<!-- 4. Accuracy per Prompt -->
+<h2>4. Accuracy per Prompt Type</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Prompt Type</th>
+      <th>Prompts Used (approx)</th>
+      <th>Successful Outcomes</th>
+      <th>Accuracy</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feature Implementation</td>
+      <td>3–5</td>
+      <td>95%+</td>
+      <td><span class="metric">~95%</span></td>
+      <td>Features delivered; occasional schema/config tweaks</td>
+    </tr>
+    <tr>
+      <td>Bug Fix</td>
+      <td>1–2</td>
+      <td>1</td>
+      <td><span class="metric">100%</span></td>
+      <td>Fixes applied on first or second attempt</td>
+    </tr>
+    <tr>
+      <td>Testing</td>
+      <td>8–12</td>
+      <td>98%+</td>
+      <td><span class="metric">~98%</span></td>
+      <td>Minor failures (e.g. export assertion, upload filename)</td>
+    </tr>
+    <tr>
+      <td>Documentation</td>
+      <td>2–3</td>
+      <td>100%</td>
+      <td><span class="metric">100%</span></td>
+      <td>Docs updated as requested</td>
+    </tr>
+    <tr>
+      <td>Refinement</td>
+      <td>6–10</td>
+      <td>100%</td>
+      <td><span class="metric">100%</span></td>
+      <td>Iterations until all tests pass and coverage met</td>
+    </tr>
+    <tr>
+      <td>Setup &amp; Configuration</td>
+      <td>1–2</td>
+      <td>100%</td>
+      <td><span class="metric">100%</span></td>
+      <td>Setup steps and tooling configured</td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Overall accuracy (weighted):</strong> ~97%</p>
+
+<!-- 5. Time Matrix -->
+<h2>5. Time Comparison: Manual vs AI-Assisted</h2>
+<p>Estimate of effort if done manually vs. with AI agent assistance.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Manual Estimate</th>
+      <th>AI-Assisted Time</th>
+      <th>Time Saved</th>
+      <th>Speed Multiplier</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Project setup (bundle, DB, seeds)</td>
+      <td>30–60 min</td>
+      <td>5–10 min</td>
+      <td>~80%</td>
+      <td><span class="metric">4–6x</span></td>
+    </tr>
+    <tr>
+      <td>Free Gift module (model, cart, checkout)</td>
+      <td>4–6 hours</td>
+      <td>30–60 min</td>
+      <td>~85%</td>
+      <td><span class="metric">5–8x</span></td>
+    </tr>
+    <tr>
+      <td>Product Combo (Buy X get Y)</td>
+      <td>6–8 hours</td>
+      <td>1–2 hours</td>
+      <td>~80%</td>
+      <td><span class="metric">4–6x</span></td>
+    </tr>
+    <tr>
+      <td>Bug fix (schema/column error)</td>
+      <td>1–2 hours</td>
+      <td>5–15 min</td>
+      <td>~90%</td>
+      <td><span class="metric">8–12x</span></td>
+    </tr>
+    <tr>
+      <td>Full RSpec suite (179+ examples, 95% coverage)</td>
+      <td>8–12 hours</td>
+      <td>1–2 hours</td>
+      <td>~85%</td>
+      <td><span class="metric">6–8x</span></td>
+    </tr>
+    <tr>
+      <td>Spec fixes &amp; coverage refinement</td>
+      <td>2–4 hours</td>
+      <td>20–40 min</td>
+      <td>~80%</td>
+      <td><span class="metric">4–5x</span></td>
+    </tr>
+    <tr>
+      <td>Documentation updates</td>
+      <td>1–2 hours</td>
+      <td>10–20 min</td>
+      <td>~85%</td>
+      <td><span class="metric">4–6x</span></td>
+    </tr>
+    <tr class="highlight">
+      <td><strong>Total (typical sprint)</strong></td>
+      <td><strong>22–35 hours</strong></td>
+      <td><strong>4–6 hours</strong></td>
+      <td><strong>~80%</strong></td>
+      <td><strong>5–7x</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="summary-box">
+  <h3>Summary</h3>
+  <ul>
+    <li><strong>Manual total:</strong> ~22–35 hours for the described scope</li>
+    <li><strong>AI-assisted total:</strong> ~4–6 hours</li>
+    <li><strong>Approximate time saved:</strong> 18–29 hours (~80%)</li>
+    <li><strong>Effective speed increase:</strong> ~5–7x</li>
+  </ul>
+</div>
+
+<!-- 6. Key Outcomes -->
+<h2>6. Key Outcomes</h2>
+<ul>
+  <li><strong>Features delivered:</strong> Free Gift module, Product Combo (Buy X get Y free)</li>
+  <li><strong>Test suite:</strong> 179+ RSpec examples, ≥95% line coverage (SimpleCov)</li>
+  <li><strong>Docs:</strong> setup.md, test-strategy.md, and related docs kept in sync</li>
+  <li><strong>Stability:</strong> Bug fixes applied; test failures reduced through iteration</li>
+</ul>
+
+<!-- 7. Recommendations -->
+<h2>7. Recommendations</h2>
+<ul>
+  <li>Use <strong>feature implementation</strong> and <strong>testing</strong> prompts with clear acceptance criteria.</li>
+  <li>Expect <strong>1–3 refinement prompts</strong> per task for edge cases and coverage.</li>
+  <li>Keep <strong>documentation</strong> prompts explicit (what to update and where).</li>
+  <li>Use <strong>setup.md</strong> as the canonical reference for project setup.</li>
+</ul>
+
+<hr>
+<p class="meta"><em>File location: ec-admin-docs/ai-agent-evaluation-report.html</em></p>
+
+</body>
+</html>

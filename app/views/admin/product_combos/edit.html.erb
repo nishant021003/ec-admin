@@ -1,0 +1,9 @@
+<h1 class="mb-4"><%= t('product_combos.edit_combo') %></h1>
+
+<div class="card">
+  <div class="card-body">
+    <%= render "form", product_combo: @product_combo %>
+  </div>
+</div>
+
+<%= link_to "← #{t('product_combos.back_to_combo')}", admin_product_combo_path(@product_combo), class: "btn btn-secondary mt-3" %>
