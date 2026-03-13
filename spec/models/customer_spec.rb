@@ -29,6 +29,12 @@ RSpec.describe Customer, type: :model do
     expect(customer.email).to eq("test@example.com")
   end
 
+  it "has many orders" do
+    customer = create(:customer)
+    create(:order, customer: customer)
+    expect(customer.orders.count).to eq(1)
+  end
+
   it "has secure password" do
     customer = Customer.new(name: "Test", email: "test@example.com", password: "Secret123!", password_confirmation: "Secret123!")
     expect(customer).to be_valid

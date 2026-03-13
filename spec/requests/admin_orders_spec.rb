@@ -19,6 +19,15 @@ RSpec.describe "Admin orders", type: :request do
       get admin_order_path(order)
       expect(response).to have_http_status(:ok)
     end
+
+    it "shows order with line items" do
+      order = create(:order)
+      product = create(:product)
+      create(:order_line_item, order: order, product: product, quantity: 2, unit_price_cents: 500)
+      get admin_order_path(order)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(product.name)
+    end
   end
 
   describe "PATCH /admin/orders/:id" do
@@ -41,6 +50,12 @@ RSpec.describe "Admin orders", type: :request do
       get export_admin_orders_path
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("id,customer_name")
+    end
+
+    it "exports order data in CSV rows" do
+      order = create(:order)
+      get export_admin_orders_path
+      expect(response.body).to include(order.id.to_s)
     end
   end
 end

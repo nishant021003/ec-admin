@@ -34,6 +34,13 @@ RSpec.describe "Customer sessions (SessionsController)", type: :request do
       expect(flash[:alert]).to eq("Invalid email or password.")
     end
 
+    it "signs in with case-insensitive email" do
+      customer = create(:customer, email: "Test@Example.com")
+      post customer_login_path, params: { email: "test@example.com", password: "Password123!" }
+      expect(response).to redirect_to(root_path)
+      expect(session[:customer_id]).to eq(customer.id)
+    end
+
     it "fails when customer not found" do
       post customer_login_path, params: { email: "nonexistent@example.com", password: "Password123!" }
       expect(response).to have_http_status(:unprocessable_entity)

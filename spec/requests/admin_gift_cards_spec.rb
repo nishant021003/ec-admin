@@ -6,6 +6,13 @@ RSpec.describe "Admin gift cards", type: :request do
   before { sign_in_admin }
 
   describe "GET /admin/gift_cards" do
+    it "shows gift card details" do
+      gc = create(:gift_card, code: "MYGIFT500")
+      get admin_gift_card_path(gc)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("MYGIFT500")
+    end
+
     it "lists gift cards" do
       create_list(:gift_card, 2)
       get admin_gift_cards_path

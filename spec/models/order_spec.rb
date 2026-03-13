@@ -34,6 +34,15 @@ RSpec.describe Order, type: :model do
     expect(order.subtotal_cents).to eq(1300)
   end
 
+  it "associates with customer and line items" do
+    customer = create(:customer)
+    order = create(:order, customer: customer)
+    product = create(:product)
+    create(:order_line_item, order: order, product: product)
+    expect(order.customer).to eq(customer)
+    expect(order.order_line_items.count).to eq(1)
+  end
+
   it "has paper trail" do
     order = create(:order)
     expect(order.respond_to?(:versions)).to be true

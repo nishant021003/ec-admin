@@ -13,6 +13,11 @@ RSpec.describe GiftCard, type: :model do
     expect(gc).not_to be_valid
   end
 
+  it "validates status inclusion" do
+    gc = build(:gift_card, status: "invalid")
+    expect(gc).not_to be_valid
+  end
+
   it "requires unique code" do
     create(:gift_card, code: "GIFT123")
     gc = build(:gift_card, code: "GIFT123")

@@ -18,6 +18,11 @@ RSpec.describe Category, type: :model do
     expect(category.slug).to eq("test-category")
   end
 
+  it "validates position as integer" do
+    category = build(:category, position: 0)
+    expect(category).to be_valid
+  end
+
   it "ensures unique slug" do
     create(:category, name: "Same Name")
     cat2 = create(:category, name: "Same Name")

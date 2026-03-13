@@ -23,6 +23,14 @@ RSpec.describe OrderLineItem, type: :model do
     expect(item.free_gift?).to be true
   end
 
+  it "belongs to order and product" do
+    order = create(:order)
+    product = create(:product)
+    item = create(:order_line_item, order: order, product: product)
+    expect(item.order).to eq(order)
+    expect(item.product).to eq(product)
+  end
+
   it "scopes free_gifts and paid_items" do
     order = create(:order)
     p1 = create(:product)

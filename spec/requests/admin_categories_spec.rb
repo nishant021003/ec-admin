@@ -11,6 +11,13 @@ RSpec.describe "Admin categories", type: :request do
       get admin_categories_path
       expect(response).to have_http_status(:ok)
     end
+
+    it "shows category details" do
+      category = create(:category, name: "Electronics")
+      get admin_category_path(category)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Electronics")
+    end
   end
 
   describe "POST /admin/categories" do
@@ -24,6 +31,15 @@ RSpec.describe "Admin categories", type: :request do
         post admin_categories_path, params: { category: { name: "Electronics" } }
       }.to change(Category, :count).by(1)
       expect(response).to redirect_to(admin_category_path(Category.last))
+    end
+  end
+
+  describe "GET /admin/categories/:id (show)" do
+    it "displays category with parent" do
+      parent = create(:category, name: "Parent")
+      child = create(:category, name: "Child", parent: parent)
+      get admin_category_path(child)
+      expect(response).to have_http_status(:ok)
     end
   end
 

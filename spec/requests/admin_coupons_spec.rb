@@ -11,6 +11,13 @@ RSpec.describe "Admin coupons", type: :request do
       get admin_coupons_path
       expect(response).to have_http_status(:ok)
     end
+
+    it "shows coupon details" do
+      coupon = create(:coupon, code: "SAVE50", discount_value: 50)
+      get admin_coupon_path(coupon)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("SAVE50")
+    end
   end
 
   describe "POST /admin/coupons" do
@@ -30,6 +37,14 @@ RSpec.describe "Admin coupons", type: :request do
   end
 
   describe "PATCH /admin/coupons/:id" do
+    it "renders edit with errors when invalid" do
+      coupon = create(:coupon)
+      patch admin_coupon_path(coupon), params: {
+        coupon: { code: "", discount_type: "percentage", discount_value: -1 }
+      }
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
     it "updates a coupon" do
       coupon = create(:coupon, discount_value: 10)
       patch admin_coupon_path(coupon), params: {

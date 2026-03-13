@@ -9,6 +9,13 @@ RSpec.describe "Admin product combos", type: :request do
   before { sign_in_admin }
 
   describe "GET /admin/product_combos" do
+    it "shows product combo details" do
+      combo = create(:product_combo, trigger_product: trigger_product, free_product: free_product)
+      get admin_product_combo_path(combo)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Trigger Product")
+    end
+
     it "lists product combos" do
       create(:product_combo, trigger_product: trigger_product, free_product: free_product)
       get admin_product_combos_path

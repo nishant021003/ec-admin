@@ -7,6 +7,15 @@ RSpec.describe "Admin products", type: :request do
 
   before { sign_in_admin }
 
+  describe "GET /admin/products/:id" do
+    it "shows product details" do
+      product = create(:product, name: "Widget Pro")
+      get admin_product_path(product)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Widget Pro")
+    end
+  end
+
   describe "GET /admin/products" do
     it "lists products" do
       create_list(:product, 3)

@@ -29,6 +29,11 @@ RSpec.describe Product, type: :model do
     expect(product).not_to be_valid
   end
 
+  it "validates stock_quantity >= 0" do
+    product = build(:product, stock_quantity: -1)
+    expect(product).not_to be_valid
+  end
+
   it "scope search filters by name and description" do
     p1 = create(:product, name: "Apple Juice")
     p2 = create(:product, name: "X", description: "Apple flavor")

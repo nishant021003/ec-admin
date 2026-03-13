@@ -11,6 +11,13 @@ RSpec.describe "Admin customers", type: :request do
       get admin_customers_path
       expect(response).to have_http_status(:ok)
     end
+
+    it "shows customer details" do
+      customer = create(:customer, name: "Jane Doe", email: "jane@example.com")
+      get admin_customer_path(customer)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Jane Doe")
+    end
   end
 
   describe "POST /admin/customers" do
@@ -30,6 +37,20 @@ RSpec.describe "Admin customers", type: :request do
   end
 
   describe "PATCH /admin/customers/:id" do
+    it "updates customer with new password" do
+      customer = create(:customer)
+      patch admin_customer_path(customer), params: {
+        customer: {
+          name: customer.name,
+          email: customer.email,
+          password: "NewPassword123!",
+          password_confirmation: "NewPassword123!"
+        }
+      }
+      expect(response).to redirect_to(admin_customer_path(customer))
+      expect(customer.reload.authenticate("NewPassword123!")).to be_truthy
+    end
+
     it "updates a customer" do
       customer = create(:customer, name: "Old Name")
       patch admin_customer_path(customer), params: { customer: { name: "New Name", email: customer.email } }
