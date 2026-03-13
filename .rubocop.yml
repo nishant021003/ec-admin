@@ -1,0 +1,7 @@
+# Inherit from rubocop-rails-omakase; override Style/StringLiterals to allow double quotes
+# (avoids 1500+ autocorrects; CI was failing on single-quote preference)
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
