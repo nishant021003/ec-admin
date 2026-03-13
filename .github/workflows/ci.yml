@@ -21,7 +21,7 @@ jobs:
           bundler-cache: true
 
       - name: Run RuboCop
-        run: bundle exec rubocop app/ lib/
+        run: bundle exec rubocop app config db spec
 
 
   security:
@@ -66,7 +66,7 @@ jobs:
 
     env:
       RAILS_ENV: test
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/ec_admin_test
 
     steps:
       - name: Install system dependencies
@@ -84,11 +84,11 @@ jobs:
 
       - name: Setup Database
         run: |
-          bin/rails db:create
-          bin/rails db:schema:load
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
 
       - name: Check Pending Migrations
-        run: bin/rails db:abort_if_pending_migrations
+        run: bundle exec rails db:abort_if_pending_migrations
 
       - name: Run RSpec
         run: bundle exec rspec
