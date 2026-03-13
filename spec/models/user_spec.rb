@@ -31,4 +31,9 @@ RSpec.describe User, type: :model do
     user.add_role :admin
     expect(user.has_role?(:admin)).to be true
   end
+
+  it "normalizes email to lowercase" do
+    user = create(:user, email: "TEST@Example.COM")
+    expect(user.email).to eq("test@example.com")
+  end
 end

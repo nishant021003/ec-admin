@@ -1,0 +1,45 @@
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><%= link_to t('nav.product_combos'), admin_product_combos_path %></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @product_combo.display_name %></li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0"><%= @product_combo.display_name %></h1>
+  <div class="d-flex gap-2">
+    <%= link_to t('common.edit'), edit_admin_product_combo_path(@product_combo), class: "btn btn-primary" %>
+    <%= button_to t('common.delete'), admin_product_combo_path(@product_combo), method: :delete, form: { data: { turbo_confirm: t('common.confirm_delete') } }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3"><%= t('product_combos.trigger') %></dt>
+      <dd class="col-sm-9">
+        <% @product_combo.product_combo_triggers.each do |t| %>
+          <span class="badge bg-secondary me-1"><%= t.quantity %>× <%= link_to t.product.name, admin_product_path(t.product) %></span>
+        <% end %>
+      </dd>
+
+      <dt class="col-sm-3"><%= t('product_combos.free_product') %></dt>
+      <dd class="col-sm-9">
+        <% @product_combo.product_combo_free_products.each do |f| %>
+          <span class="badge bg-info me-1"><%= f.quantity %>× <%= link_to f.product.name, admin_product_path(f.product) %></span>
+        <% end %>
+      </dd>
+
+      <dt class="col-sm-3"><%= t('product_combos.valid_from') %></dt>
+      <dd class="col-sm-9"><%= @product_combo.valid_from&.strftime("%Y-%m-%d") || "—" %></dd>
+
+      <dt class="col-sm-3"><%= t('product_combos.valid_to') %></dt>
+      <dd class="col-sm-9"><%= @product_combo.valid_to&.strftime("%Y-%m-%d") || "—" %></dd>
+
+      <dt class="col-sm-3"><%= t('columns.status') %></dt>
+      <dd class="col-sm-9"><span class="badge bg-<%= @product_combo.is_active ? 'success' : 'secondary' %>"><%= @product_combo.is_active ? t('status.active') : t('status.inactive') %></span></dd>
+    </dl>
+  </div>
+</div>
+
+<%= link_to "← #{t('product_combos.back_to_combos')}", admin_product_combos_path, class: "btn btn-secondary mt-3" %>

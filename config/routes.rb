@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :users, except: %i[show]
     resources :coupons
     resources :gift_cards
+    resources :product_combos
     resources :products do
       get :export, on: :collection
       post :import, on: :collection
