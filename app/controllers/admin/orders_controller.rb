@@ -24,7 +24,7 @@ module Admin
     end
 
     def export
-      orders = Order.includes(:customer, :order_line_items => :product).order(created_at: :desc)
+      orders = Order.includes(:customer, order_line_items: :product).order(created_at: :desc)
       csv = generate_orders_csv(orders)
       send_data csv, filename: "orders_#{Time.current.strftime('%Y%m%d_%H%M')}.csv", type: "text/csv"
     end
